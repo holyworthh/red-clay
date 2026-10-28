@@ -418,7 +418,7 @@ Objects and publications are supporting extensions.
 
 **Form:** Gently tapered cylindrical body.
 
-**Handle:** Compact loop.
+**Handle:** None — handleless tumbler form.
 
 **Working capacity:** **300ml / approximately 10oz**
 

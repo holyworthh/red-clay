@@ -342,7 +342,7 @@ The Material Series should share permanent geometry and typography while differe
 
 ### The Kiln Cup
 
-Use a **modeled 3D render** as the source of truth. The canon fixes iron-rich high-fired stoneware, exposed red exterior, warm mineral-white satin glaze, tapered cylinder, compact loop handle, 300ml comfortable fill, and approximate dimensions. Add controlled `PHOTO_COMPOSITE` hand/ritual scenes only after the model is consistent. AI-only production is not reliable enough for this geometry or the dimensions graphic.
+Use a **modeled 3D render** as the source of truth. The canon fixes iron-rich high-fired stoneware, exposed red exterior, warm mineral-white satin glaze, tapered handleless cylinder, 300ml comfortable fill, and approximate dimensions. Add controlled `PHOTO_COMPOSITE` hand/ritual scenes only after the model is consistent. AI-only production is not reliable enough for this geometry or the dimensions graphic.
 
 ### Real regions and process
 

@@ -425,7 +425,7 @@ This is fictional product canon. If a physical prototype is ever manufactured, t
 ## Form
 
 - gently tapered cylindrical body;
-- compact loop handle;
+- handleless (tumbler form, held by the body);
 - restrained foot;
 - comfortable everyday coffee cup.
 

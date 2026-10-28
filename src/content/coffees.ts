@@ -467,7 +467,7 @@ export const kilnCup: ObjectProduct = {
   grinds: [],
   uses: ["Filter coffee", "Long black", "Everyday coffee"],
   placeHeading: "Built around the daily brew.",
-  placeCopy: "The form is gently tapered, with a compact loop handle, an exposed red clay exterior, and a warm mineral-white satin glaze inside.",
+  placeCopy: "The form is a gently tapered, handleless cup, with an exposed red clay exterior and a warm mineral-white satin glaze inside.",
   comparison: "Pair it with Laterite for balance, Linen for a lighter filter, or a coffee from the Current Harvest.",
   relatedProducts: ["LATERITE", "LINEN", "KIAMBU / WASHED 01"],
   media: media(redClayAssets.pending.kilnCup),
