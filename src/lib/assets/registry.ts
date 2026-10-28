@@ -248,22 +248,67 @@ export const redClayAssets = {
       role: "Pour-over hands plate",
     },
   },
-  pending: {
-    laterite: { id: "SHOP-LATERITE-01", status: "CUSTOM_ASSET_PENDING", role: "Laterite product media", alt: "Laterite coffee." },
-    basalt: { id: "SHOP-BASALT-01", status: "CUSTOM_ASSET_PENDING", role: "Basalt product media", alt: "Basalt coffee." },
-    linen: { id: "SHOP-LINEN-01", status: "CUSTOM_ASSET_PENDING", role: "Linen product media", alt: "Linen coffee." },
-    kiambuWashed01: { id: "SHOP-KIAMBU-WASHED-01", status: "CUSTOM_ASSET_PENDING", role: "Kiambu Washed 01 product media", alt: "Kiambu / Washed 01 coffee." },
-    kirinyagaWashed02: { id: "SHOP-KIRINYAGA-WASHED-02", status: "CUSTOM_ASSET_PENDING", role: "Kirinyaga Washed 02 product media", alt: "Kirinyaga / Washed 02 coffee." },
-    kayanzaWashed01: { id: "SHOP-KAYANZA-WASHED-01", status: "CUSTOM_ASSET_PENDING", role: "Kayanza Washed 01 product media", alt: "Kayanza / Washed 01 coffee." },
-    kayanzaNatural02: { id: "SHOP-KAYANZA-NATURAL-02", status: "CUSTOM_ASSET_PENDING", role: "Kayanza Natural 02 product media", alt: "Kayanza / Natural 02 coffee." },
-    sidamaWashed01: { id: "SHOP-SIDAMA-WASHED-01", status: "CUSTOM_ASSET_PENDING", role: "Sidama Washed 01 product media", alt: "Sidama / Washed 01 coffee." },
-    gujiNatural02: { id: "SHOP-GUJI-NATURAL-02", status: "CUSTOM_ASSET_PENDING", role: "Guji Natural 02 product media", alt: "Guji / Natural 02 coffee." },
-    afterlight: { id: "SHOP-AFTERLIGHT-01", status: "CUSTOM_ASSET_PENDING", role: "Afterlight product media", alt: "Afterlight decaf coffee." },
-    instantEthiopia: { id: "SHOP-INSTANT-ETHIOPIA-01", status: "CUSTOM_ASSET_PENDING", role: "Red Clay Instant Ethiopia product media", alt: "Red Clay Instant — Ethiopia." },
-    threeRegions: { id: "SHOP-THREE-REGIONS-01", status: "CUSTOM_ASSET_PENDING", role: "Three Regions product media", alt: "Three Regions discovery box." },
-    kilnCup: { id: "SHOP-KILN-01", status: "CUSTOM_ASSET_PENDING", role: "Kiln Cup product media", alt: "The Kiln Cup." },
+  products: {
+    materialLaterite: {
+      id: "PRODUCT-LATERITE-FRONT",
+      src: "/media/red-clay/products/material-laterite.jpg",
+      status: "APPROVED_CURRENT",
+      alt: "Laterite coffee bag, front.",
+      role: "Laterite packshot",
+    },
+    materialBasalt: {
+      id: "PRODUCT-BASALT-FRONT",
+      src: "/media/red-clay/products/material-basalt.jpg",
+      status: "APPROVED_CURRENT",
+      alt: "Basalt coffee bag, front.",
+      role: "Basalt packshot",
+    },
+    materialLinen: {
+      id: "PRODUCT-LINEN-FRONT",
+      src: "/media/red-clay/products/material-linen.jpg",
+      status: "APPROVED_CURRENT",
+      alt: "Linen coffee bag, front.",
+      role: "Linen packshot",
+    },
+    materialTrio: {
+      id: "PRODUCT-MATERIAL-SERIES-TRIO",
+      src: "/media/red-clay/products/material-series-trio.jpg",
+      status: "APPROVED_CURRENT",
+      alt: "Laterite, Basalt and Linen coffee bags standing side by side.",
+      role: "Material Series group packshot",
+    },
+  },
+  objects: {
+    kilnPlinth: {
+      id: "OBJECT-KILN-CUP-PLINTH",
+      src: "/media/red-clay/objects/kiln-cup-plinth.jpg",
+      status: "APPROVED_CURRENT",
+      alt: "The Kiln Cup, red stoneware with a white glazed interior, on a terracotta plinth.",
+      role: "Kiln Cup hero",
+    },
+    kilnRakingLight: {
+      id: "OBJECT-KILN-CUP-RAKING",
+      src: "/media/red-clay/objects/kiln-cup-raking-light.jpg",
+      status: "APPROVED_CURRENT",
+      alt: "The Kiln Cup in raking light on a terracotta surface.",
+      role: "Kiln Cup alternate",
+    },
+  },
+  crops: {
+    redEarth: {
+      id: "HOME-PLACE-RED-EARTH-CROP",
+      src: "/media/red-clay/documentary/hpl-01_kia-l1__kiambu_red_earth_track_crop-912.jpg",
+      status: "APPROVED_CURRENT",
+      alt: "A red earth track between coffee trees at Fairview Estate in Kiambu, Kenya.",
+      role: "Continuum earth plate",
+      location: "Fairview Estate, Kiambu, Kenya",
+      creator: "Daniel Case",
+      license: "CC BY-SA 4.0",
+      sourcePage: "https://commons.wikimedia.org/wiki/File:Dirt_road_at_Fairview_Estates_coffee_planation,_Kiambu,_KE.jpg",
+    },
   },
 } as const satisfies Record<string, Record<string, RedClayAsset>>;
 
-export const pendingPlaceholderPath = (assetId: string, kind: "coffee" | "kiln-cup" | "pairing" = "coffee") =>
-  `/media/red-clay/placeholders/${kind}/${assetId.toLowerCase()}.svg`;
+export const textures = {
+  paperGrain: "/media/red-clay/textures/paper-grain.png",
+} as const;

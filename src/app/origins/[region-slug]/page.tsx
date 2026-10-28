@@ -17,6 +17,8 @@ export default async function OriginPage({ params }: { params: Promise<{ "region
   const { "region-slug": slug } = await params;
   const origin = getOriginBySlug(slug);
   if (!origin) notFound();
-  const nextOrigin = origins[(origins.findIndex((item) => item.slug === origin.slug) + 1) % origins.length];
-  return <OriginDossier origin={origin} nextOrigin={nextOrigin} />;
+  const index = origins.findIndex((item) => item.slug === origin.slug);
+  const nextOrigin = origins[(index + 1) % origins.length];
+  const previousOrigin = origins[(index + origins.length - 1) % origins.length];
+  return <OriginDossier origin={origin} nextOrigin={nextOrigin} previousOrigin={previousOrigin} />;
 }

@@ -5,7 +5,7 @@ export type HeroTone = "light" | "dark";
 export type HeroSlide = {
   id: string;
   label: string;
-  secondaryLabel?: string;
+  caption: string;
   image: string;
   alt: string;
   objectPosition?: string;
@@ -18,16 +18,16 @@ export const homeHeroSlides = [
   {
     id: "place",
     label: "Place",
-    secondaryLabel: "Kiambu, Kenya",
-    image: redClayAssets.documentary.homePlace.src,
-    alt: redClayAssets.documentary.homePlace.alt,
-    objectPosition: "52% 52%",
+    caption: "Fairview Estate, Kiambu",
+    image: redClayAssets.documentary.kiambuLead.src,
+    alt: redClayAssets.documentary.kiambuLead.alt,
+    objectPosition: "50% 55%",
     headerTone: "light",
   },
   {
     id: "process",
     label: "Process",
-    secondaryLabel: "Fairview Estate, Kiambu, Kenya",
+    caption: "Drying rack, Kiambu",
     image: redClayAssets.documentary.homeProcess.src,
     alt: redClayAssets.documentary.homeProcess.alt,
     objectPosition: "50% 48%",
@@ -36,10 +36,10 @@ export const homeHeroSlides = [
   {
     id: "ritual",
     label: "Ritual",
-    secondaryLabel: "The morning pour",
-    image: redClayAssets.ritual.hands.src,
-    alt: redClayAssets.ritual.hands.alt,
-    objectPosition: "50% 48%",
-    headerTone: "dark",
+    caption: "Early light",
+    image: redClayAssets.ritual.pourOver.src,
+    alt: redClayAssets.ritual.pourOver.alt,
+    objectPosition: "50% 45%",
+    headerTone: "light",
   },
 ] as const satisfies readonly HeroSlide[];

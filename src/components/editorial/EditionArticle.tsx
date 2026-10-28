@@ -1,96 +1,74 @@
+import Image from "next/image";
 import Link from "next/link";
-import { MediaFrame } from "@/components/editorial/MediaFrame";
-import { ProductMediaPlaceholder } from "@/components/media/ProductMediaPlaceholder";
-import { PageContainer, SectionLabel } from "@/components/layout/PageContainer";
+import { ProductVisual } from "@/components/product/ProductVisual";
+import { formatKes, getProductBySlug, type Product } from "@/content/coffees";
 import { editions, type Edition } from "@/content/editions";
-import { coffees } from "@/content/coffees";
 
-type EditionEndingVariant = "horizontal" | "compact" | "paired" | "standard";
-
-const editionEndingVariants: Record<string, EditionEndingVariant> = {
-  "water-and-time": "horizontal",
-  "along-the-kayanza-hills": "compact",
-  "beyond-heirloom": "paired",
-};
+const figureClass = ["article-fig--inset", "article-fig--wide", "article-fig--right", "article-fig--wide", "article-fig--inset", "article-fig--right"];
 
 export function EditionArticle({ edition }: { edition: Edition }) {
-  const products = edition.connectedCoffees
-    .map((connection) => ({ connection, product: coffees.find((coffee) => coffee.slug === connection.slug) }))
-    .filter((item): item is { connection: (typeof edition.connectedCoffees)[number]; product: (typeof coffees)[number] } => Boolean(item.product));
-  const endingVariant = editionEndingVariants[edition.slug] ?? "standard";
+  const coffees = edition.connectedCoffees
+    .map((connection) => ({ connection, product: getProductBySlug(connection.slug) }))
+    .filter((item): item is { connection: Edition["connectedCoffees"][number]; product: Product } => item.product !== undefined);
   const next = editions[(editions.findIndex((item) => item.slug === edition.slug) + 1) % editions.length];
 
-  return <main id="main-content" className={`edition-article edition-article--${edition.slug}`}>
-    <section className="edition-article-masthead page-container">
-      <div><SectionLabel>{edition.eyebrow}</SectionLabel><span className="edition-article-region">{edition.region}</span></div>
-      <h1>{edition.title}</h1>
-      <p className="edition-article-subtitle">{edition.subtitle}</p>
-    </section>
+  return (
+    <main id="main-content" className="article">
+      <header className="wrap article-head">
+        <p className="mono muted article-eyebrow"><Link href="/journal">Editions</Link> / Volume 01 — Place / Story {edition.storyOrdinal}</p>
+        <h1 className="serif article-title">{edition.title}</h1>
+        <p className="mono muted article-eyebrow">{edition.region} · {edition.sections.length} sections</p>
+        <p className="serif article-subtitle">{edition.subtitle}</p>
+      </header>
+      {edition.leadAsset.src && (
+        <figure className="wrap article-lead">
+          <div className="article-lead-media"><Image className="grade" src={edition.leadAsset.src} alt={edition.leadAsset.alt} fill priority sizes="100vw" /></div>
+          <figcaption className="mono muted">{edition.leadAsset.alt.replace(/\.$/, "")}</figcaption>
+        </figure>
+      )}
 
-    <section className="edition-article-opening page-container">
-      <MediaFrame asset={edition.leadAsset} className="edition-article-lead" priority sizes="(max-width: 767px) 100vw, 74vw" />
-      <div className="edition-article-thesis"><p>{edition.standfirst}</p></div>
-    </section>
-
-    <section className="edition-article-body page-container">
-      {edition.sections.map((section, index) => <article key={section.heading} className={`edition-section edition-section--${index + 1}`}>
-        <div className="edition-section-copy">
-          <SectionLabel>{section.label}</SectionLabel>
-          <h2>{section.heading}</h2>
-          {section.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
-        </div>
-        {section.asset && <figure className={`edition-section-figure ${section.assetClass ?? ""}`}>
-          <MediaFrame asset={section.asset} sizes="(max-width: 767px) 100vw, 62vw" />
-          {section.caption && <figcaption>{section.caption}</figcaption>}
-        </figure>}
-      </article>)}
-    </section>
-
-    <section className={`edition-article-commerce edition-article-ending edition-article-ending--${endingVariant}`} aria-labelledby="edition-commerce-title">
-      <PageContainer>
-        <div className="edition-commerce-intro edition-article-ending-copy">
-          <SectionLabel>CONNECTED COFFEES</SectionLabel>
-          <h2 id="edition-commerce-title">{edition.coffeeHeading}</h2>
-          <p>{edition.coffeeBlurb}</p>
-        </div>
-        <div className={`edition-commerce-grid edition-commerce-grid--${endingVariant}`}>
-          {products.map(({ connection, product }, index) => <article key={product.id} className={`edition-commerce-product edition-commerce-product--${endingVariant} edition-commerce-product--${index + 1}`}>
-            <ProductMediaPlaceholder assetId={product.media.pdpHero.id} label={connection.name} kind="coffee" />
-            <div>
-              <span className="mono-label">{product.region}</span>
-              <h3>{connection.name}</h3>
-              <p>{connection.blurb}</p>
-              <Link className="editorial-link" href={`/shop/${connection.slug}`}>View {connection.name} <span aria-hidden="true">↗</span></Link>
+      <article className="wrap article-body">
+        <p className="serif article-standfirst">{edition.standfirst}</p>
+        {edition.sections.map((section, index) => (
+          <section key={section.heading} className="article-section">
+            <p className="mono accent article-label">{section.label}</p>
+            <div className="article-text">
+              <h2 className="serif display-m">{section.heading}</h2>
+              {section.paragraphs.map((paragraph, pIndex) => <p key={paragraph} className={index === 0 && pIndex === 0 ? "dropcap" : undefined}>{paragraph}</p>)}
             </div>
-          </article>)}
+            {section.asset?.src && (
+              <figure className={`article-fig ${figureClass[index % figureClass.length]}`}>
+                <div className="article-fig-media"><Image className="grade" src={section.asset.src} alt={section.asset.alt} fill sizes="(max-width: 820px) 100vw, 80vw" /></div>
+                {section.caption && <figcaption className="mono muted">{section.caption}</figcaption>}
+              </figure>
+            )}
+          </section>
+        ))}
+      </article>
+
+      <section className="article-coffees">
+        <div className="wrap article-coffees-grid">
+          <div><p className="mono muted">Connected coffees</p><h2 className="serif display-s">{edition.coffeeHeading}</h2><p>{edition.coffeeBlurb}</p></div>
+          <div className="grid-2">
+            {coffees.map(({ connection, product }) => (
+              <Link key={product.slug} href={`/shop/${product.slug}`} className="article-coffee">
+                <span className="ratio-4-5"><ProductVisual product={product} sizes="15vw" /></span>
+                <span className="article-coffee-copy"><span className="serif display-s">{product.name}</span><span className="small">{connection.blurb}</span><span>{formatKes(product.price)}</span></span>
+              </Link>
+            ))}
+          </div>
         </div>
-      </PageContainer>
-    </section>
+      </section>
 
-    <section className="edition-article-sources page-container" aria-labelledby="edition-sources-title">
-      <div>
-        <SectionLabel>FURTHER READING</SectionLabel>
-        <h2 id="edition-sources-title">Sources &amp; further reading</h2>
-      </div>
-      <ol>
-        {edition.sources.map((source) => <li key={source.url}>
-          <a href={source.url} target="_blank" rel="noreferrer">{source.title}</a>
-          <span>{source.organization}</span>
-        </li>)}
-      </ol>
-    </section>
+      <section className="wrap article-sources" aria-labelledby="sources-title">
+        <h2 id="sources-title" className="mono muted">Sources</h2>
+        <ol>{edition.sources.map((source, index) => <li key={source.url}><span className="mono muted">0{index + 1}</span><span><a href={source.url} target="_blank" rel="noreferrer">{source.title}</a> — {source.organization}</span></li>)}</ol>
+      </section>
 
-    <section className="edition-article-related page-container">
-      <div>
-        <SectionLabel>RELATED ORIGIN</SectionLabel>
-        <h2>{edition.region}</h2>
-        <p>{edition.relatedOriginBlurb}</p>
-        <Link className="editorial-link" href={`/origins/${edition.relatedOriginSlug}`}>Explore {edition.region} <span aria-hidden="true">↗</span></Link>
-      </div>
-      <div className="edition-article-next">
-        <SectionLabel>NEXT STORY · {next.storyOrdinal} / 03</SectionLabel>
-        <Link href={`/journal/${next.slug}`}><h3>{next.title}</h3><span className="editorial-link">Read next <span aria-hidden="true">↗</span></span></Link>
-      </div>
-    </section>
-  </main>;
+      <nav className="wrap dossier-pager" aria-label="More reading">
+        <Link href={`/origins/${edition.relatedOriginSlug}`}><span className="mono muted">Related dossier</span><span className="serif">{edition.region}</span></Link>
+        <Link href={`/journal/${next.slug}`}><span className="mono muted">Next story · {next.storyOrdinal}</span><span className="serif">{next.title} →</span></Link>
+      </nav>
+    </main>
+  );
 }

@@ -9,7 +9,6 @@ export type BagItem = {
   lineKey?: string;
   slug: string;
   region: string;
-  assetId: string;
   kind: Product["kind"];
   quantity: number;
   /** The selected sellable variant. These remain optional for older saved bag items. */
@@ -31,8 +30,10 @@ type BagContextValue = {
   decrement: (lineKey: string) => void;
   remove: (lineKey: string) => void;
   undoRemove: () => void;
+  canUndo: boolean;
   open: (trigger?: HTMLElement | null) => void;
   close: () => void;
+  clear: () => void;
 };
 
 const BagContext = createContext<BagContextValue | null>(null);
@@ -42,6 +43,7 @@ const itemPrice = (item: BagItem) => {
   const product = getProductById(item.id);
   return item.price ?? (product ? getProductVariantPrice(product, item) : null);
 };
+const nameOf = (id: Product["id"]) => getProductById(id)?.name ?? id;
 const formatSubtotal = (value: number | null) => value == null
   ? "KES unavailable"
   : `KES ${new Intl.NumberFormat("en-KE", { maximumFractionDigits: 0 }).format(value)}`;
@@ -59,7 +61,6 @@ const itemFromProduct = (product: Product, variant: BagVariant = {}): BagItem =>
     lineKey: getBagLineKey({ id: product.id, format, grind }),
     slug: product.slug,
     region: product.region,
-    assetId: product.media.shopPrimary.id,
     kind: product.kind,
     quantity: 1,
     format,
@@ -100,7 +101,7 @@ export function BagProvider({ children }: { children: React.ReactNode }) {
       return [...current, { ...newItem, quantity: safeQuantity }];
     });
     const variantLabel = [newItem.format, newItem.grind].filter(Boolean).join(", ");
-    setAnnouncement([product.id, variantLabel].filter(Boolean).join(", ") + " added to your bag.");
+    setAnnouncement([product.name, variantLabel].filter(Boolean).join(", ") + " added to your bag.");
     open(trigger);
   }, [open]);
 
@@ -110,7 +111,7 @@ export function BagProvider({ children }: { children: React.ReactNode }) {
     const nextQuantity = item.quantity + 1;
     setItems((current) => current.map((entry) => getBagLineKey(entry) === lineKey ? { ...entry, quantity: entry.quantity + 1 } : entry));
     const nextItems = itemsRef.current.map((entry) => getBagLineKey(entry) === lineKey ? { ...entry, quantity: nextQuantity } : entry);
-    setAnnouncement(`${item.id} quantity ${nextQuantity}. Subtotal ${formatSubtotal(subtotalFor(nextItems))}.`);
+    setAnnouncement(`${nameOf(item.id)} quantity ${nextQuantity}. Subtotal ${formatSubtotal(subtotalFor(nextItems))}.`);
   }, []);
   const decrement = useCallback((lineKey: string) => {
     const item = itemsRef.current.find((entry) => getBagLineKey(entry) === lineKey);
@@ -119,13 +120,13 @@ export function BagProvider({ children }: { children: React.ReactNode }) {
       const nextQuantity = item.quantity - 1;
       setItems((current) => current.map((entry) => getBagLineKey(entry) === lineKey ? { ...entry, quantity: entry.quantity - 1 } : entry));
       const nextItems = itemsRef.current.map((entry) => getBagLineKey(entry) === lineKey ? { ...entry, quantity: nextQuantity } : entry);
-      setAnnouncement(`${item.id} quantity ${nextQuantity}. Subtotal ${formatSubtotal(subtotalFor(nextItems))}.`);
+      setAnnouncement(`${nameOf(item.id)} quantity ${nextQuantity}. Subtotal ${formatSubtotal(subtotalFor(nextItems))}.`);
       return;
     }
     const index = itemsRef.current.findIndex((entry) => getBagLineKey(entry) === lineKey);
     setLastRemoved({ item, index });
     setItems((current) => current.filter((entry) => getBagLineKey(entry) !== lineKey));
-    setAnnouncement(`${item.id} removed from your bag. Undo is available.`);
+    setAnnouncement(`${nameOf(item.id)} removed from your bag. Undo is available.`);
     if (undoTimerRef.current != null) window.clearTimeout(undoTimerRef.current);
     undoTimerRef.current = window.setTimeout(() => setLastRemoved(null), 8000);
   }, []);
@@ -135,7 +136,7 @@ export function BagProvider({ children }: { children: React.ReactNode }) {
     const item = itemsRef.current[index];
     setLastRemoved({ item, index });
     setItems((current) => current.filter((entry) => getBagLineKey(entry) !== lineKey));
-    setAnnouncement(`${item.id} removed from your bag. Undo is available.`);
+    setAnnouncement(`${nameOf(item.id)} removed from your bag. Undo is available.`);
     if (undoTimerRef.current != null) window.clearTimeout(undoTimerRef.current);
     undoTimerRef.current = window.setTimeout(() => setLastRemoved(null), 8000);
   }, []);
@@ -148,9 +149,15 @@ export function BagProvider({ children }: { children: React.ReactNode }) {
       next.splice(Math.min(removed.index, next.length), 0, removed.item);
       return next;
     });
-    setAnnouncement(`${removed.item.id} restored to your bag.`);
+    setAnnouncement(`${nameOf(removed.item.id)} restored to your bag.`);
     setLastRemoved(null);
     if (undoTimerRef.current != null) window.clearTimeout(undoTimerRef.current);
+  }, []);
+
+  const clear = useCallback(() => {
+    setItems([]);
+    setLastRemoved(null);
+    setAnnouncement("");
   }, []);
 
   const value = useMemo(() => ({
@@ -163,9 +170,11 @@ export function BagProvider({ children }: { children: React.ReactNode }) {
     decrement,
     remove,
     undoRemove,
+    canUndo: lastRemoved != null,
     open,
     close,
-  }), [items, isOpen, announcement, add, increment, decrement, remove, undoRemove, open, close]);
+    clear,
+  }), [items, isOpen, announcement, lastRemoved, add, increment, decrement, remove, undoRemove, open, close, clear]);
 
   return <BagContext.Provider value={value}>{children}</BagContext.Provider>;
 }

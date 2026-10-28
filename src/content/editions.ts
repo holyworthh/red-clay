@@ -54,8 +54,8 @@ export const editions: Edition[] = [
     relatedBlurb: "Follow what happens between a ripe cherry and dry parchment, and why no single processing word explains the whole cup.",
     region: "Central Kenya",
     connectedCoffees: [
-      { slug: "kiambu-washed-01", name: "Kiambu / Washed 01", blurb: "Blackcurrant, plum, and cane sugar in the more structured Kenyan profile." },
-      { slug: "kirinyaga-washed-02", name: "Kirinyaga / Washed 02", blurb: "Red currant, hibiscus, and pomelo in the more lifted Kenyan profile." },
+      { slug: "plum-season", name: "Plum Season", blurb: "Blackcurrant, plum, and cane sugar in the more structured Kenyan profile." },
+      { slug: "cane-light", name: "Cane Light", blurb: "Red currant, hibiscus, and pomelo in the more lifted Kenyan profile." },
     ],
     coffeeHeading: "Read two Kenyan coffees through the same broad process.",
     coffeeBlurb: "Both Red Clay coffees are washed, but their profiles are deliberately different. Compare place, selection, and cup character instead of treating “washed Kenya” as one flavor.",
@@ -133,10 +133,10 @@ export const editions: Edition[] = [
       },
       {
         label: "07 / READING RED CLAY",
-        heading: "Kiambu / Washed 01 is one composed profile.",
+        heading: "Plum Season is one composed profile.",
         paragraphs: [
-          "Within Red Clay’s product system, Kiambu / Washed 01 brings this reading back to a specific choice: blackcurrant, plum, and cane-sugar sweetness in a bright, structured cup. Those notes describe the intended profile of this coffee. They are not offered as proof that Kiambu, SL varieties, or washed processing must taste that way.",
-          "Kirinyaga / Washed 02 provides the useful check. It shares a country and broad process category, yet its profile moves toward red currant, hibiscus, and pomelo. Compare the two and the point becomes clear: washing can help explain how coffee was handled, but it never finishes the story on its own.",
+          "Within Red Clay’s product system, Plum Season, from Kiambu, brings this reading back to a specific choice: blackcurrant, plum, and cane-sugar sweetness in a bright, structured cup. Those notes describe the intended profile of this coffee. They are not offered as proof that Kiambu, SL varieties, or washed processing must taste that way.",
+          "Cane Light, from Kirinyaga, provides the useful check. It shares a country and broad process category, yet its profile moves toward red currant, hibiscus, and pomelo. Compare the two and the point becomes clear: washing can help explain how coffee was handled, but it never finishes the story on its own.",
         ],
       },
     ],
@@ -159,8 +159,8 @@ export const editions: Edition[] = [
     relatedBlurb: "See how a washing station gathers many deliveries, and why a raised bed still depends on repeated human decisions.",
     region: "Kayanza / Burundi",
     connectedCoffees: [
-      { slug: "kayanza-washed-01", name: "Kayanza / Washed 01", blurb: "Red apple, honey, and orange blossom in the softer, more floral profile." },
-      { slug: "kayanza-natural-02", name: "Kayanza / Natural 02", blurb: "Raspberry, black tea, and brown sugar in the rounder, deeper profile." },
+      { slug: "honey-bloom", name: "Honey Bloom", blurb: "Red apple, honey, and orange blossom in the softer, more floral profile." },
+      { slug: "red-orchard", name: "Red Orchard", blurb: "Raspberry, black tea, and brown sugar in the rounder, deeper profile." },
     ],
     coffeeHeading: "One region, two post-harvest routes.",
     coffeeBlurb: "The pair is designed to make comparison useful. Keep Kayanza in view, then notice how the washed and natural profiles move in different directions without treating process as destiny.",
@@ -243,7 +243,7 @@ export const editions: Edition[] = [
         label: "08 / READING RED CLAY",
         heading: "Two Kayanza coffees make the comparison visible.",
         paragraphs: [
-          "Kayanza / Washed 01 is Red Clay’s softer, more floral reading: red apple, honey, and orange blossom. Kayanza / Natural 02 turns toward raspberry, black tea, and brown-sugar depth. The profiles are designed to help a visitor choose, not to claim that every washed or natural coffee from the region follows the same pattern.",
+          "Honey Bloom is Red Clay’s softer, more floral Kayanza reading: red apple, honey, and orange blossom. Red Orchard turns toward raspberry, black tea, and brown-sugar depth. The profiles are designed to help a visitor choose, not to claim that every washed or natural coffee from the region follows the same pattern.",
           "Taste them as a pair and the useful questions become easier to hold. What stayed constant? What changed? Region is shared at a broad level. Process direction changes. The intended cup changes too. Everything else—from specific plant material to daily station practice—would need its own evidence before it could complete the explanation.",
         ],
       },
@@ -267,11 +267,11 @@ export const editions: Edition[] = [
     relatedBlurb: "Look beneath a convenient bag label to the landraces, local selections, research varieties, and geographic detail it can hide.",
     region: "Southern Ethiopia",
     connectedCoffees: [
-      { slug: "sidama-washed-01", name: "Sidama / Washed 01", blurb: "Jasmine, yellow peach, and lemon tea in the lighter Ethiopian profile." },
-      { slug: "guji-natural-02", name: "Guji / Natural 02", blurb: "Strawberry, apricot, and cacao nib in the rounder Ethiopian profile." },
+      { slug: "jasmine-air", name: "Jasmine Air", blurb: "Jasmine, yellow peach, and lemon tea in the lighter Ethiopian profile." },
+      { slug: "blue-hour", name: "Blue Hour", blurb: "Strawberry, apricot, and cacao nib in the rounder Ethiopian profile." },
     ],
     coffeeHeading: "Two Ethiopian coffees, described with more than one word.",
-    coffeeBlurb: "Sidama / Washed 01 and Guji / Natural 02 use place, process, and a specific sensory profile to create contrast. Neither relies on “heirloom” as a complete explanation.",
+    coffeeBlurb: "Jasmine Air and Blue Hour use place, process, and a specific sensory profile to create contrast. Neither relies on “heirloom” as a complete explanation.",
     relatedOriginSlug: "southern-ethiopia",
     relatedOriginBlurb: "Compare Sidama with Guji, washed with natural, and broad plant-language with the details an individual coffee can actually support.",
     leadAsset: redClayAssets.origins.ethiopiaLead,
@@ -343,9 +343,9 @@ export const editions: Edition[] = [
       },
       {
         label: "07 / READING RED CLAY",
-        heading: "Sidama / Washed 01 and Guji / Natural 02 create a deliberate contrast.",
+        heading: "Jasmine Air and Blue Hour create a deliberate contrast.",
         paragraphs: [
-          "Sidama / Washed 01 is Red Clay’s lighter Ethiopian profile: jasmine, yellow peach, and lemon tea. Guji / Natural 02 is the rounder one: strawberry, apricot, and cacao nib. Place changes, process changes, and the intended sensory direction changes with them.",
+          "Jasmine Air, from Sidama, is Red Clay’s lighter Ethiopian profile: jasmine, yellow peach, and lemon tea. Blue Hour, from Guji, is the rounder one: strawberry, apricot, and cacao nib. Place changes, process changes, and the intended sensory direction changes with them.",
           "The pair is useful because it does not ask “heirloom” to explain either coffee. Sidama and Guji locate them at a regional level. Washed and natural describe the broad post-harvest route. The tasting notes help a visitor choose between Red Clay’s two profiles. Exact variety detail should enter only when the coffee can support it.",
           "This is a product comparison, not evidence that Sidama must be floral or Guji must be fruit-driven. Reverse examples exist, and new harvests will continue to resist a neat two-column rule.",
         ],

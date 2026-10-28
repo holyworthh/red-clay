@@ -3,186 +3,217 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { gsap } from "gsap";
-import { SplitText } from "gsap/SplitText";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { type HeroTone, homeHeroToneEvent } from "@/content/homeHero";
 import { navigation } from "@/content/navigation";
 import { redClayAssets } from "@/lib/assets/registry";
 import { useBag } from "@/components/commerce/BagProvider";
 
-gsap.registerPlugin(SplitText);
+type Panel = "shop" | "origins" | null;
 
-type Reveal = "shop" | "origins" | null;
+const CLOSE_DELAY = 180;
 
 export function Header() {
   const pathname = usePathname();
   const { count, open: openBag } = useBag();
+  const [panel, setPanel] = useState<Panel>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [reveal, setReveal] = useState<Reveal>(null);
   const [heroTone, setHeroTone] = useState<HeroTone>("light");
-  const menuButtonRef = useRef<HTMLButtonElement>(null);
-  const panelButtonRef = useRef<HTMLButtonElement>(null);
-  const originButtonRef = useRef<HTMLButtonElement>(null);
-  const lastFocusedRef = useRef<HTMLElement | null>(null);
+  const closeTimer = useRef<number | null>(null);
   const isHome = pathname === "/";
 
+  const cancelClose = useCallback(() => {
+    if (closeTimer.current != null) window.clearTimeout(closeTimer.current);
+    closeTimer.current = null;
+  }, []);
+  const scheduleClose = useCallback(() => {
+    cancelClose();
+    closeTimer.current = window.setTimeout(() => setPanel(null), CLOSE_DELAY);
+  }, [cancelClose]);
+  const openPanel = useCallback((next: Exclude<Panel, null>) => {
+    cancelClose();
+    setPanel(next);
+  }, [cancelClose]);
+
   useEffect(() => {
+    setPanel(null);
     setMobileOpen(false);
-    setReveal(null);
   }, [pathname]);
+
+  useEffect(() => () => cancelClose(), [cancelClose]);
 
   useEffect(() => {
     if (!isHome) return;
-
-    const onHeroTone = (event: Event) => {
+    const onTone = (event: Event) => {
       const tone = (event as CustomEvent<HeroTone>).detail;
       if (tone === "light" || tone === "dark") setHeroTone(tone);
     };
-
-    const initialTone = document.documentElement.dataset.homeHeroTone;
-    if (initialTone === "light" || initialTone === "dark") setHeroTone(initialTone);
-    document.addEventListener(homeHeroToneEvent, onHeroTone);
-    return () => document.removeEventListener(homeHeroToneEvent, onHeroTone);
+    const initial = document.documentElement.dataset.homeHeroTone;
+    if (initial === "light" || initial === "dark") setHeroTone(initial);
+    document.addEventListener(homeHeroToneEvent, onTone);
+    return () => document.removeEventListener(homeHeroToneEvent, onTone);
   }, [isHome]);
 
   useEffect(() => {
-    if (!mobileOpen) return;
-    lastFocusedRef.current = document.activeElement as HTMLElement;
-    document.body.classList.add("menu-open");
-    document.querySelector<HTMLElement>("#mobile-navigation a, #mobile-navigation button")?.focus();
-    return () => {
-      document.body.classList.remove("menu-open");
-      lastFocusedRef.current?.focus();
-    };
-  }, [mobileOpen]);
-
-  useEffect(() => {
-    const onKeyDown = (event: KeyboardEvent) => {
+    if (!panel) return;
+    const onKey = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
-        if (mobileOpen) setMobileOpen(false);
-        if (reveal) {
-          setReveal(null);
-          (reveal === "shop" ? panelButtonRef : originButtonRef).current?.focus();
-        }
-      }
-      if (mobileOpen && event.key === "Tab") {
-        const focusable = Array.from(document.querySelectorAll<HTMLElement>("#mobile-navigation a, #mobile-navigation button"));
-        if (focusable.length === 0) return;
-        const first = focusable[0];
-        const last = focusable[focusable.length - 1];
-        if (event.shiftKey && document.activeElement === first) {
-          event.preventDefault();
-          last.focus();
-        } else if (!event.shiftKey && document.activeElement === last) {
-          event.preventDefault();
-          first.focus();
-        }
+        setPanel(null);
       }
     };
-    document.addEventListener("keydown", onKeyDown);
-    return () => document.removeEventListener("keydown", onKeyDown);
-  }, [mobileOpen, reveal]);
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [panel]);
 
-  useEffect(() => {
-    if (!reveal) return;
-    const onPointerDown = (event: PointerEvent) => {
-      const target = event.target as Node;
-      if (!target.parentElement?.closest(".nav-reveal-wrap")) setReveal(null);
-    };
-    document.addEventListener("pointerdown", onPointerDown);
-    return () => document.removeEventListener("pointerdown", onPointerDown);
-  }, [reveal]);
-
+  const closeMobile = useCallback(() => setMobileOpen(false), []);
   const isCurrent = (href: string) => pathname === href || (href !== "/" && pathname.startsWith(`${href}/`));
-  const openReveal = (nextReveal: Exclude<Reveal, null>) => setReveal(nextReveal);
+  const overlay = isHome && !panel;
+  const tone = overlay ? heroTone : "solid";
 
   return (
-    <header
-      className={`site-header ${isHome ? "site-header--home" : ""}`}
-      data-tone={isHome ? heroTone : undefined}
-      data-reveal-open={Boolean(reveal)}
-      data-mobile-open={mobileOpen}
-      onPointerLeave={(event) => {
-        if (event.pointerType === "mouse") setReveal(null);
-      }}
-    >
+    <header className={`site-header ${isHome ? "site-header--home" : ""}`} data-tone={tone} data-panel={panel ?? "none"} onMouseLeave={scheduleClose} onMouseEnter={cancelClose}>
       <a className="skip-link" href="#main-content">Skip to content</a>
-      <div className="header-inner page-container">
-        <button ref={menuButtonRef} className="mobile-menu-trigger" type="button" aria-label={mobileOpen ? "Close menu" : "Open menu"} aria-expanded={mobileOpen} aria-controls="mobile-navigation" onClick={() => setMobileOpen((open) => !open)}>
-          <span className="menu-icon" aria-hidden="true"><i /><i /></span>
-          <span className="sr-only">{mobileOpen ? "Close menu" : "Menu"}</span>
-        </button>
-        <Link className="wordmark" href="/" aria-label="Red Clay home">RED CLAY</Link>
-        <nav className="desktop-nav" aria-label="Primary navigation">
-          <div className="nav-reveal-wrap">
-            <button ref={panelButtonRef} className={`nav-link nav-link-button ${isCurrent("/shop") ? "is-current" : ""}`} type="button" aria-expanded={reveal === "shop"} aria-controls="shop-reveal" onClick={() => openReveal("shop")} onPointerEnter={(event) => { if (event.pointerType === "mouse") openReveal("shop"); }}>Shop</button>
-            {reveal === "shop" && <ShopRevealPanel onClose={() => setReveal(null)} />}
-          </div>
-          <div className="nav-reveal-wrap">
-            <button ref={originButtonRef} className={`nav-link nav-link-button ${isCurrent("/origins") ? "is-current" : ""}`} type="button" aria-expanded={reveal === "origins"} aria-controls="origins-reveal" onClick={() => openReveal("origins")} onPointerEnter={(event) => { if (event.pointerType === "mouse") openReveal("origins"); }}>Origins</button>
-            {reveal === "origins" && <RevealPanel id="origins-reveal" eyebrow="ORIGINS" allLabel="Explore all origins" items={navigation.originReveal} feature="The Earthen Folio" href="/origins" image={redClayAssets.origins.burundiLead.src} onClose={() => setReveal(null)} />}
-          </div>
-          {navigation.primary.slice(2).map((item) => <Link className={`nav-link ${isCurrent(item.href) ? "is-current" : ""}`} key={item.href} href={item.href} onFocus={() => setReveal(null)} onPointerEnter={(event) => { if (event.pointerType === "mouse") setReveal(null); }}>{item.label}</Link>)}
-        </nav>
-        <Link className="bag-link" href="/bag" aria-label={`Bag, ${count} items`} onClick={(event) => { event.preventDefault(); openBag(event.currentTarget); }}>Bag <span aria-hidden="true">({count})</span></Link>
+      <div className="site-header-bar">
+        <div className="site-header-left">
+          <nav className="site-nav" aria-label="Primary">
+            {navigation.primary.map((item) => {
+              const key = item.href === "/shop" ? "shop" : item.href === "/origins" ? "origins" : null;
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`site-nav-link ${isCurrent(item.href) || (key !== null && panel === key) ? "is-current" : ""}`}
+                  onMouseEnter={() => (key ? openPanel(key) : setPanel(null))}
+                  onFocus={() => setPanel(null)}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
+          </nav>
+          <button className="site-menu-button" type="button" aria-label="Open menu" aria-expanded={mobileOpen} aria-controls="mobile-menu" onClick={() => setMobileOpen(true)}>
+            <svg width="22" height="12" viewBox="0 0 22 12" aria-hidden="true"><path d="M0 1h22M0 11h22" stroke="currentColor" strokeWidth="1.2" /></svg>
+          </button>
+        </div>
+        <Link className="site-wordmark" href="/" aria-label="Red Clay, home">Red Clay</Link>
+        <div className="site-header-right">
+          <button className="site-nav-link site-bag" type="button" aria-label={`Bag, ${count} ${count === 1 ? "item" : "items"}`} onClick={(event) => openBag(event.currentTarget)}>Bag ({count})</button>
+        </div>
       </div>
-      {mobileOpen && <MobileNavigation pathname={pathname} close={() => setMobileOpen(false)} />}
+      {panel === "shop" && <ShopPanel key="shop" onNavigate={() => setPanel(null)} />}
+      {panel === "origins" && <OriginsPanel key="origins" onNavigate={() => setPanel(null)} />}
+      {mobileOpen && <MobileMenu count={count} close={closeMobile} openBag={openBag} />}
     </header>
   );
 }
 
-function ShopRevealPanel({ onClose }: Readonly<{ onClose: () => void }>) {
-  return <section className="reveal-panel reveal-panel--shop" id="shop-reveal" aria-label="Shop">
-    <div className="reveal-panel-primary">
-      <p className="section-label">SHOP</p>
-      <Link className="reveal-all-link" href="/shop" onClick={onClose}>Shop all <span aria-hidden="true">↗</span></Link>
-      <div className="reveal-groups">{navigation.shopRevealGroups.map((group) => <section className="reveal-group" key={group.label} aria-labelledby={`shop-group-${group.label.toLowerCase().replaceAll(" ", "-")}`}><h2 id={`shop-group-${group.label.toLowerCase().replaceAll(" ", "-")}`}>{group.label}</h2><ul>{group.items.map((item) => <li key={item.href}><Link href={item.href} onClick={onClose}>{item.label}</Link></li>)}</ul></section>)}</div>
+function ShopPanel({ onNavigate }: Readonly<{ onNavigate: () => void }>) {
+  let row = 0;
+  const delay = () => ({ animationDelay: `${(row++) * 0.055}s` });
+  return (
+    <div className="mega">
+      <div className="mega-grid">
+        <div className="mega-col mega-col--primary">
+          <span className="mono mega-label cascade" style={delay()}>Coffee</span>
+          {navigation.shopMenu.coffee.map((item) => <Link key={item.href} href={item.href} className="mega-primary-link cascade" style={delay()} onClick={onNavigate}>{item.label}</Link>)}
+        </div>
+        <div className="mega-col">
+          <span className="mono mega-label cascade" style={delay()}>Current Harvest</span>
+          {navigation.shopMenu.harvest.map((item) => <Link key={item.href} href={item.href} className="mega-link cascade" style={delay()} onClick={onNavigate}>{item.label} <span>— {item.meta}</span></Link>)}
+          <span className="mono mega-label mega-label--gap cascade" style={delay()}>Object</span>
+          {navigation.shopMenu.object.map((item) => <Link key={item.href} href={item.href} className="mega-link cascade" style={delay()} onClick={onNavigate}>{item.label}</Link>)}
+        </div>
+        <Link href="/shop#material-series" className="mega-feature cascade-feature" onClick={onNavigate}>
+          <span className="mega-feature-media mega-feature-media--bags">
+            {[redClayAssets.products.materialLaterite, redClayAssets.products.materialBasalt, redClayAssets.products.materialLinen].map((asset) => <Image key={asset.id} className="cut" src={asset.src} alt={asset.alt} width={444} height={680} sizes="12vw" />)}
+          </span>
+          <span className="mega-feature-caption"><span className="serif">The Material Series — Laterite, Basalt, Linen</span><span className="mono">House coffees</span></span>
+        </Link>
+      </div>
     </div>
-    <Link className="reveal-feature" href="/shop/three-regions" onClick={onClose}>
-      <span className="reveal-feature-copy"><small>START HERE</small><strong>Three Regions</strong></span>
-      <Image src={redClayAssets.origins.kenyaDetail.src!} alt="" fill sizes="42vw" />
-    </Link>
-  </section>;
+  );
 }
 
-function RevealPanel({ id, eyebrow, allLabel, items, feature, href, image, onClose }: Readonly<{ id: string; eyebrow: string; allLabel: string; items: readonly { label: string; href: string }[]; feature: string; href: string; image?: string; onClose: () => void }>) {
-  return <div className="reveal-panel" id={id} role="region" aria-label={eyebrow}>
-    <div className="reveal-panel-primary">
-      <p className="section-label">{eyebrow}</p>
-      <Link className="reveal-all-link" href={href} onClick={onClose}>{allLabel} <span aria-hidden="true">↗</span></Link>
-      <ul>{items.map((item) => <li key={item.href}><Link href={item.href} onClick={onClose}>{item.label}</Link></li>)}</ul>
+function OriginsPanel({ onNavigate }: Readonly<{ onNavigate: () => void }>) {
+  const [active, setActive] = useState(0);
+  const items = navigation.originMenu;
+  return (
+    <div className="mega">
+      <div className="mega-grid mega-grid--origins">
+        <div className="mega-col mega-col--list">
+          <span className="mono mega-label cascade">Origins</span>
+          {items.map((item, index) => (
+            <Link key={item.href} href={item.href} className="mega-region cascade" style={{ animationDelay: `${(index + 1) * 0.055}s` }} onMouseEnter={() => setActive(index)} onFocus={() => setActive(index)} onClick={onNavigate}>
+              <span className="serif">{item.label}</span><span className="mono">{item.meta}</span>
+            </Link>
+          ))}
+        </div>
+        <div className="mega-feature cascade-feature">
+          <span className="mega-feature-media">
+            {items.map((item, index) => <Image key={item.href} className="grade mega-region-image" data-active={index === active} src={item.image.src} alt={index === active ? item.image.alt : ""} fill sizes="45vw" />)}
+          </span>
+          <span className="mega-feature-caption"><span className="serif">{items[active].label}</span><span className="mono">{items[active].caption}</span></span>
+        </div>
+      </div>
     </div>
-    <Link className="reveal-feature" href={href} onClick={onClose}>
-      <span className="reveal-feature-copy"><small>FEATURED</small><strong>{feature}</strong></span>
-      {image && <Image src={image} alt="" fill sizes="42vw" />}
-    </Link>
-  </div>;
+  );
 }
 
-function MobileNavigation({ pathname, close }: Readonly<{ pathname: string; close: () => void }>) {
-  const navigationRef = useRef<HTMLDivElement>(null);
+function MobileMenu({ count, close, openBag }: Readonly<{ count: number; close: () => void; openBag: (trigger?: HTMLElement | null) => void }>) {
+  const [section, setSection] = useState<"shop" | "origins" | null>("shop");
+  const ref = useRef<HTMLDivElement>(null);
+  const lastFocus = useRef<HTMLElement | null>(null);
 
-  useLayoutEffect(() => {
-    const root = navigationRef.current;
-    if (!root || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
-    const splitTargets = Array.from(root.querySelectorAll<HTMLElement>(".mobile-navigation .section-label, .mobile-navigation li a, .mobile-close"));
-    const splits = splitTargets.map((target) => SplitText.create(target, { type: "words", wordsClass: "mobile-menu-word", aria: "auto" }));
-    const words = splits.flatMap((split) => split.words);
-    const tween = gsap.fromTo(words, { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.45, ease: "power3.out", stagger: 0.055, clearProps: "transform,opacity" });
-
-    return () => {
-      tween.kill();
-      splits.forEach((split) => split.revert());
+  useEffect(() => {
+    lastFocus.current = document.activeElement as HTMLElement;
+    document.body.classList.add("menu-open");
+    ref.current?.querySelector<HTMLElement>("button, a")?.focus();
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") close();
+      if (event.key !== "Tab" || !ref.current) return;
+      const focusable = Array.from(ref.current.querySelectorAll<HTMLElement>("a[href], button"));
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+      else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
     };
-  }, []);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.body.classList.remove("menu-open");
+      document.removeEventListener("keydown", onKey);
+      lastFocus.current?.focus();
+    };
+  }, [close]);
 
-  return <div ref={navigationRef} className="mobile-navigation" id="mobile-navigation" role="dialog" aria-modal="true" aria-label="Site navigation">
-    <div className="mobile-navigation-inner page-container">
-      <p className="section-label">RED CLAY / NAVIGATION</p>
-      <nav aria-label="Mobile navigation"><ul>{navigation.primary.map((item) => <li key={item.href}><Link className={pathname === item.href ? "is-current" : ""} href={item.href} onClick={close}>{item.label}</Link></li>)}<li><Link href="/bag" onClick={close}>Bag</Link></li></ul></nav>
-      <button className="mobile-close" type="button" onClick={close}>Close menu</button>
+  const toggle = (next: "shop" | "origins") => setSection((current) => (current === next ? null : next));
+
+  return (
+    <div ref={ref} className="mobile-menu" id="mobile-menu" role="dialog" aria-modal="true" aria-label="Menu">
+      <div className="mobile-menu-bar">
+        <button className="mobile-menu-close" type="button" aria-label="Close menu" onClick={close}><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 2l12 12M14 2L2 14" stroke="currentColor" strokeWidth="1.3" /></svg></button>
+        <Link className="site-wordmark" href="/" onClick={close}>Red Clay</Link>
+        <button className="site-nav-link" type="button" onClick={() => { close(); openBag(document.querySelector<HTMLElement>(".site-menu-button")); }}>Bag ({count})</button>
+      </div>
+      <nav className="mobile-menu-nav" aria-label="Menu">
+        <button className="mobile-menu-top" type="button" aria-expanded={section === "shop"} onClick={() => toggle("shop")}><span className="serif">Shop</span><span aria-hidden="true">{section === "shop" ? "−" : "+"}</span></button>
+        {section === "shop" && <div className="mobile-menu-sub">
+          {navigation.shopMenu.coffee.map((item) => <Link key={item.href} href={item.href} onClick={close}>{item.label}</Link>)}
+          {navigation.shopMenu.object.map((item) => <Link key={item.href} href={item.href} onClick={close}>{item.label}</Link>)}
+          <span className="mobile-menu-bags">
+            {[redClayAssets.products.materialLaterite, redClayAssets.products.materialBasalt, redClayAssets.products.materialLinen].map((asset) => <Image key={asset.id} className="cut" src={asset.src} alt={asset.alt} width={444} height={680} sizes="28vw" />)}
+          </span>
+        </div>}
+        <button className="mobile-menu-top" type="button" aria-expanded={section === "origins"} onClick={() => toggle("origins")}><span className="serif">Origins</span><span aria-hidden="true">{section === "origins" ? "−" : "+"}</span></button>
+        {section === "origins" && <div className="mobile-menu-sub">
+          {navigation.originMenu.map((item) => <Link key={item.href} href={item.href} onClick={close}>{item.label}<span className="mono">{item.meta}</span></Link>)}
+        </div>}
+        <Link className="mobile-menu-top" href="/journal" onClick={close}><span className="serif">Editions</span></Link>
+        <Link className="mobile-menu-top" href="/about" onClick={close}><span className="serif">About</span></Link>
+      </nav>
+      <div className="mobile-menu-foot">
+        <Link href="/checkout" onClick={close}>Checkout</Link>
+        <p className="mono">Roasted in Nairobi · Coffee, held by place</p>
+      </div>
     </div>
-  </div>;
+  );
 }

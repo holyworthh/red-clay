@@ -1,106 +1,73 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { useEffect, useState } from "react";
 import { homeHeroSlides, homeHeroToneEvent } from "@/content/homeHero";
 
 export function HeroCarousel() {
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
+  const [active, setActive] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const [stopped, setStopped] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
-  const activeSlide = homeHeroSlides[activeIndex];
+  const slide = homeHeroSlides[active];
 
   useEffect(() => {
-    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const update = () => setReducedMotion(mediaQuery.matches);
+    const query = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const update = () => setReducedMotion(query.matches);
     update();
-    mediaQuery.addEventListener("change", update);
-    return () => mediaQuery.removeEventListener("change", update);
+    query.addEventListener("change", update);
+    return () => query.removeEventListener("change", update);
   }, []);
 
   useEffect(() => {
-    if (isPaused || reducedMotion) return;
-    const timer = window.setInterval(() => {
-      setActiveIndex((index) => (index + 1) % homeHeroSlides.length);
-    }, 5000);
+    if (paused || stopped || reducedMotion) return;
+    const timer = window.setInterval(() => setActive((index) => (index + 1) % homeHeroSlides.length), 5000);
     return () => window.clearInterval(timer);
-  }, [activeIndex, isPaused, reducedMotion]);
+  }, [active, paused, stopped, reducedMotion]);
 
   useEffect(() => {
-    document.documentElement.dataset.homeHeroTone = activeSlide.headerTone;
-    document.dispatchEvent(new CustomEvent(homeHeroToneEvent, { detail: activeSlide.headerTone }));
-
-    return () => {
-      delete document.documentElement.dataset.homeHeroTone;
-    };
-  }, [activeSlide.headerTone]);
+    document.documentElement.dataset.homeHeroTone = slide.headerTone;
+    document.dispatchEvent(new CustomEvent(homeHeroToneEvent, { detail: slide.headerTone }));
+    return () => { delete document.documentElement.dataset.homeHeroTone; };
+  }, [slide.headerTone]);
 
   return (
     <section
-      className={`home-hero-cover home-hero-cover--${activeSlide.headerTone}`}
+      className="hero"
       aria-labelledby="home-title"
-      data-home-hero
-      onFocusCapture={() => setIsPaused(true)}
-      onBlurCapture={(event) => {
-        if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setIsPaused(false);
-      }}
-      onPointerEnter={(event) => {
-        if (event.pointerType === "mouse") setIsPaused(true);
-      }}
-      onPointerLeave={(event) => {
-        if (event.pointerType === "mouse") setIsPaused(false);
-      }}
+      onPointerEnter={(event) => { if (event.pointerType === "mouse") setPaused(true); }}
+      onPointerLeave={(event) => { if (event.pointerType === "mouse") setPaused(false); }}
+      onFocusCapture={() => setPaused(true)}
+      onBlurCapture={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setPaused(false); }}
     >
-      <div className="home-hero-media" aria-live="polite">
-        {homeHeroSlides.map((slide, index) => (
-          <div
-            className={`home-hero-slide ${index === activeIndex ? "is-active" : ""}`}
-            key={slide.id}
-            aria-hidden={index !== activeIndex}
-          >
-            <Image
-              className="home-hero-image"
-              src={slide.image}
-              alt={index === activeIndex ? slide.alt : ""}
-              fill
-              priority={index === 0}
-              sizes="100vw"
-              style={{ objectPosition: slide.objectPosition }}
-            />
+      <div className="hero-media">
+        {homeHeroSlides.map((item, index) => (
+          <div key={item.id} className="hero-slide" data-active={index === active} aria-hidden={index !== active}>
+            <Image className="grade" src={item.image} alt={index === active ? item.alt : ""} fill priority={index === 0} sizes="100vw" style={{ objectPosition: item.objectPosition }} />
           </div>
         ))}
+        <div className="hero-scrim" aria-hidden="true" />
       </div>
-
-      <div className="home-hero-copy">
-        <h1 id="home-title">Coffee, held by place.</h1>
-        <p>House coffees and seasonal releases from Kenya, Burundi, and Ethiopia, with a clear path from first choice to deeper reading.</p>
-        <div className="home-hero-actions">
-          <Link href="/shop">Shop the harvest</Link>
-          <Link href="/origins">Explore Origins <span aria-hidden="true">↗</span></Link>
+      <div className="wrap hero-bottom">
+        <div className="hero-selectors" role="group" aria-label="Choose a hero story">
+          {homeHeroSlides.map((item, index) => (
+            <button
+              key={item.id}
+              type="button"
+              className="hero-selector"
+              aria-pressed={index === active}
+              onClick={() => setActive(index)}
+              onFocus={() => setActive(index)}
+              onPointerEnter={(event) => { if (event.pointerType === "mouse") setActive(index); }}
+            >
+              <span className="mono">0{index + 1}</span>
+              <span className="serif hero-selector-label">{item.label}</span>
+              <span className="mono hero-selector-caption">{item.caption}</span>
+            </button>
+          ))}
+          {!reducedMotion && <button type="button" className="mono hero-pause" aria-pressed={stopped} onClick={() => setStopped((value) => !value)}>{stopped ? "Play" : "Pause"}</button>}
         </div>
-      </div>
-
-      <div className="home-hero-controls page-container" role="group" aria-label="Choose a hero story">
-        {homeHeroSlides.map((slide, index) => (
-          <button
-            className="home-hero-selector"
-            type="button"
-            key={slide.id}
-            aria-pressed={index === activeIndex}
-            onClick={() => setActiveIndex(index)}
-            onFocus={() => setActiveIndex(index)}
-            onPointerEnter={(event) => {
-              if (event.pointerType === "mouse") setActiveIndex(index);
-            }}
-          >
-            <span className="home-hero-selector-number" aria-hidden="true">0{index + 1}</span>
-            <span className="home-hero-selector-copy">
-              <span>{slide.label}</span>
-              {slide.secondaryLabel && <small>{slide.secondaryLabel}</small>}
-            </span>
-          </button>
-        ))}
+        <h1 id="home-title" className="serif hero-title">Coffee, held by place.</h1>
       </div>
     </section>
   );

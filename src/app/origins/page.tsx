@@ -1,108 +1,99 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
-import { OriginFolio } from "@/components/origins/OriginFolio";
-import { MediaFrame } from "@/components/editorial/MediaFrame";
-import { ProductCard } from "@/components/editorial/ProductCard";
-import { PageContainer, SectionLabel } from "@/components/layout/PageContainer";
-import { coffees } from "@/content/coffees";
-import { editions } from "@/content/editions";
+import { ProductVisual } from "@/components/product/ProductVisual";
+import { formatKes, getProductBySlug } from "@/content/coffees";
 import { origins } from "@/content/origins";
 import { redClayAssets } from "@/lib/assets/registry";
 
 export const metadata: Metadata = {
-  title: "Origins",
-  description: "Compare coffee context from Central Kenya, Kayanza in Burundi, and Southern Ethiopia.",
+  title: "Origins — The Earthen Folio",
+  description: "Three highland regions, three ways into the coffee: Central Kenya, Kayanza in Burundi, and Southern Ethiopia.",
 };
 
-const readingTerms = [
-  { term: "Place", copy: "Country and region tell you where a coffee comes from. More local detail is useful when it is known." },
-  { term: "Variety", copy: "The plant material behind the fruit. A variety can shape potential, but it does not determine flavor alone." },
-  { term: "Process", copy: "How fruit and seed are separated and dried after picking. Washed and natural are starting points, not recipes." },
-  { term: "Cup", copy: "The roaster’s sensory references for this coffee. Notes describe associations; they are not added ingredients." },
-];
-
-const currentHarvestSlugs = new Set([
-  "kiambu-washed-01",
-  "kirinyaga-washed-02",
-  "kayanza-washed-01",
-  "kayanza-natural-02",
-  "sidama-washed-01",
-  "guji-natural-02",
-]);
+const chapterStyle = {
+  "central-kenya": { accent: "#9A3B22", plate: redClayAssets.documentary.kiambuLead, plateCaption: "Fairview Estate, Kiambu, Kenya", support: redClayAssets.origins.kenyaProcess, supportCaption: "Sorting cherries, Kenya", tone: "" },
+  "kayanza-burundi": { accent: "#8A6A3F", plate: redClayAssets.origins.burundiLead, plateCaption: "Processing landscape, Kayanza, Burundi", support: redClayAssets.origins.burundiSupport, supportCaption: "Hillside landscape, Burundi", tone: "folio-chapter--warm" },
+  "southern-ethiopia": { accent: "#5E2D35", plate: redClayAssets.origins.ethiopiaLead, plateCaption: "Coffee sorting, Ethiopia", support: redClayAssets.origins.ethiopiaDetail, supportCaption: "Quality sorting, Ethiopia", tone: "" },
+} as const;
 
 export default function OriginsPage() {
-  const featuredEdition = editions[0];
-
   return (
-    <main id="main-content" className="origins-page">
-      <section className="origins-thesis">
-        <PageContainer className="origins-thesis-grid">
-          <SectionLabel>01 / ORIGIN INDEX</SectionLabel>
-          <div className="origins-thesis-copy">
-            <h1>Three highland regions. Three ways into the coffee.</h1>
-            <p className="lead-copy">Compare Central Kenya, Kayanza in Burundi, and Southern Ethiopia by growing context, post-harvest work, and the coffees currently connected to each place.</p>
-          </div>
-          <div className="origins-thesis-note">
-            <span className="mono-label">READING PATH</span>
-            <p>Use the Folio for a quick comparison. Choose a region when you want the longer reading.</p>
-          </div>
-        </PageContainer>
+    <main id="main-content" className="folio">
+      <section className="wrap folio-head">
+        <div className="folio-head-title">
+          <p className="mono muted">Origins · The Earthen Folio</p>
+          <h1 className="serif display-xl">Three highland regions. Three ways into the coffee.</h1>
+        </div>
+        <div className="folio-head-side">
+          <p>A short monograph in three chapters. Each one places two coffees in a landscape, a process and a cup. The region names locate a coffee; they never stand in for its flavour.</p>
+          <nav className="folio-toc" aria-label="Chapters">
+            {origins.map((origin) => <a key={origin.slug} href={`#${origin.slug}`}><span className="mono accent">{origin.number}</span><span className="serif">{origin.name}</span></a>)}
+          </nav>
+        </div>
       </section>
 
-      <OriginFolio chapters={origins} />
+      <nav id="folio" className="folio-bar" aria-label="Chapter navigation">
+        <div className="wrap folio-bar-inner mono">
+          <span>The Earthen Folio</span>
+          {origins.map((origin) => <a key={origin.slug} href={`#${origin.slug}`}>{origin.number} {origin.name}</a>)}
+        </div>
+      </nav>
 
-      <section className="origins-reading" aria-labelledby="origins-reading-title">
-        <PageContainer>
-          <div className="origins-section-heading origins-section-heading--reading">
-            <SectionLabel>03 / FOUR USEFUL TERMS</SectionLabel>
-            <div>
-              <h2 id="origins-reading-title">Read the label without asking it to predict everything.</h2>
-              <p>Place, variety, process, and tasting notes each answer a different question.</p>
+      {origins.map((origin) => {
+        const style = chapterStyle[origin.slug as keyof typeof chapterStyle];
+        const coffees = origin.coffeeSlugs.map((slug) => getProductBySlug(slug)).filter((product) => product !== undefined);
+        return (
+          <section key={origin.slug} id={origin.slug} className={`folio-chapter ${style.tone}`} aria-labelledby={`${origin.slug}-title`}>
+            <div className="wrap folio-chapter-grid">
+              <figure className="folio-plate">
+                <div className="folio-plate-media">
+                  <Image className="grade" src={style.plate.src} alt={style.plate.alt} fill sizes="(max-width: 900px) 100vw, 58vw" />
+                  <span className="mono folio-plate-index">{origin.number} / 03</span>
+                </div>
+                <figcaption className="mono muted"><span>{style.plateCaption}</span><span>Plate {origin.number}</span></figcaption>
+              </figure>
+              <div className="folio-text">
+                <div>
+                  <p className="serif folio-number" style={{ color: style.accent }} aria-hidden="true">{origin.number}</p>
+                  <h2 id={`${origin.slug}-title`} className="serif display-m">{origin.name}</h2>
+                  <p className="serif folio-descriptor">{origin.descriptor}</p>
+                </div>
+                <dl className="folio-hub">
+                  <dt className="mono muted">Place</dt><dd>{origin.hub.place}</dd>
+                  <dt className="mono muted">Process</dt><dd>{origin.hub.process}</dd>
+                  <dt className="mono muted">Cup</dt><dd>{origin.hub.cup}</dd>
+                </dl>
+                <div className="folio-block"><p className="mono muted">{origin.headings.place}</p><p>{origin.place}</p></div>
+                <figure className="folio-support"><div className="ratio-4-3"><Image className="grade" src={style.support.src} alt={style.support.alt} fill sizes="(max-width: 900px) 100vw, 30vw" /></div><figcaption className="mono muted">{style.supportCaption}</figcaption></figure>
+                <div className="folio-block"><p className="mono muted">{origin.headings.work}</p><p>{origin.work}</p></div>
+                <div className="folio-coffees">
+                  <p className="mono muted">Two coffees from this chapter</p>
+                  <div className="grid-2">
+                    {coffees.map((coffee) => (
+                      <Link key={coffee.slug} href={`/shop/${coffee.slug}`} className="folio-coffee">
+                        <span className="ratio-4-5"><ProductVisual product={coffee} sizes="15vw" /></span>
+                        <span className="serif">{coffee.name}</span>
+                        <span className="small muted">{coffee.region.split(",")[0]} · {coffee.notes.join(" / ")}</span>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+                <Link href={`/origins/${origin.slug}`} className="line-link"><span>Read the {origin.name} dossier</span><span aria-hidden="true">→</span></Link>
+              </div>
             </div>
-          </div>
-          <dl className="origins-reading-list">
-            {readingTerms.map((item) => <div key={item.term}><dt>{item.term}</dt><dd>{item.copy}</dd></div>)}
-          </dl>
-        </PageContainer>
-      </section>
+          </section>
+        );
+      })}
 
-      <section className="origins-coffees" aria-labelledby="origins-coffees-title">
-        <PageContainer>
-          <div className="origins-section-heading">
-            <SectionLabel>04 / CURRENT HARVEST</SectionLabel>
-            <div>
-              <h2 id="origins-coffees-title">Six coffees, arranged for comparison.</h2>
-              <p>Move within one country to compare regions or keep the place fixed and compare washed with natural processing.</p>
-            </div>
-          </div>
-          <div className="origins-coffee-grid">
-            {coffees.filter((coffee) => currentHarvestSlugs.has(coffee.slug)).map((coffee, index) => <ProductCard key={coffee.id} product={coffee} featured={index === 0} />)}
-          </div>
-        </PageContainer>
-      </section>
-
-      <section className="origins-editions" aria-labelledby="origins-editions-title">
-        <PageContainer className="origins-editions-grid">
-          <div className="origins-editions-media"><MediaFrame asset={redClayAssets.origins.kenyaProcess} sizes="(max-width: 767px) 100vw, 58vw" /></div>
-          <div className="origins-editions-copy">
-            <SectionLabel>05 / RELATED EDITIONS</SectionLabel>
-            <span className="mono-label">{featuredEdition.eyebrow}</span>
-            <h2 id="origins-editions-title">{featuredEdition.title}</h2>
-            <p>{featuredEdition.relatedBlurb}</p>
-            <Link className="editorial-link" href={`/journal/${featuredEdition.slug}`}>Read {featuredEdition.title} <span aria-hidden="true">↗</span></Link>
-          </div>
-          <div className="origins-editions-list" aria-label="Other Editions">
-            {editions.slice(1).map((edition, index) => <Link href={`/journal/${edition.slug}`} key={edition.slug}><span className="mono-label">0{index + 2} / 03</span><strong>{edition.title}</strong><span aria-hidden="true">↗</span></Link>)}
-          </div>
-        </PageContainer>
-      </section>
-
-      <section className="origins-close" aria-labelledby="origins-close-title">
-        <PageContainer className="origins-close-inner">
-          <SectionLabel>06 / CONTINUE</SectionLabel>
-          <h2 id="origins-close-title">Choose a coffee from the current harvest.</h2>
-          <Link className="button button--dark" href="/shop">Shop the harvest <span aria-hidden="true">↗</span></Link>
-        </PageContainer>
+      <section className="wrap folio-after">
+        <div className="ratio-1-1"><Image className="grade" src={redClayAssets.documentary.kenyaDryingTexture.src} alt={redClayAssets.documentary.kenyaDryingTexture.alt} fill sizes="(max-width: 820px) 100vw, 40vw" /></div>
+        <div className="folio-after-copy">
+          <p className="mono muted">After the Folio</p>
+          <p className="serif display-m">Taste the three regions side by side.</p>
+          <p>Three Regions holds 100 g each of Plum Season, Honey Bloom and Jasmine Air. Taste the collection by place before choosing a full bag.</p>
+          <div className="button-row"><Link className="button" href="/shop/three-regions">Shop Three Regions</Link><span>{formatKes(getProductBySlug("three-regions")?.price ?? null)}</span><Link className="text-link" href="/journal">Or read the Editions</Link></div>
+        </div>
       </section>
     </main>
   );

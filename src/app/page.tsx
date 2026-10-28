@@ -1,145 +1,112 @@
+import Image from "next/image";
 import Link from "next/link";
-import { currentHarvest } from "@/content/coffees";
-import { editions } from "@/content/editions";
-import { MediaFrame } from "@/components/editorial/MediaFrame";
-import { ProductCard } from "@/components/editorial/ProductCard";
-import { ProductMediaPlaceholder } from "@/components/media/ProductMediaPlaceholder";
-import { HomeMotion } from "@/components/home/HomeMotion";
 import { HeroCarousel } from "@/components/home/HeroCarousel";
-import { SectionLabel } from "@/components/layout/PageContainer";
+import { ProductCard } from "@/components/product/ProductCard";
+import { HarvestStatus } from "@/components/product/HarvestStatus";
+import { formatKes, getProductById, kilnCup, type ProductId } from "@/content/coffees";
 import { redClayAssets } from "@/lib/assets/registry";
 
-export default function HomePage() {
-  const featuredEdition = editions[0];
-  const homeHarvest = currentHarvest.filter((coffee) => [
-    "KIAMBU / WASHED 01",
-    "KAYANZA / WASHED 01",
-    "SIDAMA / WASHED 01",
-    "GUJI / NATURAL 02",
-  ].includes(coffee.id));
+const homeHarvest: ProductId[] = ["PLUM SEASON", "HONEY BLOOM", "JASMINE AIR"];
 
-  return <>
-    <HomeMotion />
-    <main id="main-content">
+const continuum = [
+  { n: "01", label: "Earth", asset: redClayAssets.crops.redEarth, grade: true },
+  { n: "02", label: "Coffee", asset: redClayAssets.documentary.kiambuCherryDetail, grade: true },
+  { n: "03", label: "Vessel", asset: redClayAssets.objects.kilnRakingLight, grade: false },
+  { n: "04", label: "Ritual", asset: redClayAssets.ritual.hands, grade: true },
+];
+
+const originsPreview = [
+  { name: "Central Kenya", href: "/origins/central-kenya", meta: "Plum Season · Cane Light", asset: redClayAssets.origins.kenyaProcess, className: "home-origin home-origin--kenya" },
+  { name: "Kayanza / Burundi", href: "/origins/kayanza-burundi", meta: "Honey Bloom · Red Orchard", asset: redClayAssets.origins.burundiLead, className: "home-origin home-origin--burundi" },
+  { name: "Southern Ethiopia", href: "/origins/southern-ethiopia", meta: "Jasmine Air · Blue Hour", asset: redClayAssets.origins.ethiopiaLead, className: "home-origin home-origin--ethiopia" },
+];
+
+export default function HomePage() {
+  const harvest = homeHarvest.map((id) => getProductById(id)).filter((product) => product !== undefined);
+  const material = [redClayAssets.products.materialLaterite, redClayAssets.products.materialBasalt, redClayAssets.products.materialLinen];
+
+  return (
+    <main id="main-content" className="home">
       <HeroCarousel />
 
-      <section className="home-continuum" aria-labelledby="continuum-title" data-continuum data-active="0">
-        <h2 className="sr-only" id="continuum-title">Earth, coffee, vessel, ritual.</h2>
-        <div className="continuum-sticky">
-          <div className="continuum-kicker page-container"><SectionLabel>THE CONTINUUM</SectionLabel></div>
-          <div className="continuum-states page-container">
-            <article className="continuum-state" data-continuum-state="0">
-              <div className="continuum-state-copy"><span className="continuum-number">01 / 04</span><h3>Earth</h3><p>Where coffee begins.</p></div>
-              <MediaFrame asset={redClayAssets.materials.clay} className="continuum-state-media continuum-state-media--earth" sizes="(max-width: 1023px) 100vw, 66vw" />
-            </article>
-            <article className="continuum-state" data-continuum-state="1">
-              <div className="continuum-state-copy"><span className="continuum-number">02 / 04</span><h3>Coffee</h3><p>What each harvest becomes.</p></div>
-              <MediaFrame asset={redClayAssets.origins.kenyaDetail} className="continuum-state-media continuum-state-media--coffee" sizes="(max-width: 1023px) 100vw, 66vw" />
-            </article>
-            <article className="continuum-state" data-continuum-state="2">
-              <div className="continuum-state-copy"><span className="continuum-number">03 / 04</span><h3>Vessel</h3><p>A cup made for the brew.</p></div>
-              <MediaFrame asset={redClayAssets.materials.stone} className="continuum-state-media continuum-state-media--vessel" sizes="(max-width: 1023px) 100vw, 66vw" />
-            </article>
-            <article className="continuum-state" data-continuum-state="3">
-              <div className="continuum-state-copy"><span className="continuum-number">04 / 04</span><h3>Ritual</h3><p>Make, taste, adjust, return.</p></div>
-              <MediaFrame asset={redClayAssets.ritual.pourOver} className="continuum-state-media continuum-state-media--ritual" sizes="(max-width: 1023px) 100vw, 66vw" />
-            </article>
-          </div>
-          <div className="continuum-progress page-container" aria-hidden="true"><span /></div>
+      <section className="wrap home-continuum" aria-labelledby="continuum-title">
+        <div className="home-continuum-head">
+          <p className="mono muted">The continuum</p>
+          <h2 id="continuum-title" className="serif display-m">Earth becomes coffee. Coffee meets the vessel. The vessel holds a ritual.</h2>
+        </div>
+        <div className="home-continuum-grid">
+          {continuum.map((item, index) => (
+            <figure key={item.label} className={`home-continuum-item home-continuum-item--${index + 1}`}>
+              <div className="ratio-3-4"><Image className={item.grade ? "grade" : undefined} src={item.asset.src} alt={item.asset.alt} fill sizes="(max-width: 820px) 50vw, 25vw" /></div>
+              <figcaption><span className="mono accent">{item.n}</span><span className="serif">{item.label}</span></figcaption>
+            </figure>
+          ))}
         </div>
       </section>
 
-      <section className="home-harvest" aria-labelledby="harvest-title">
-        <div className="page-container">
-          <header className="harvest-intro">
-            <SectionLabel>CURRENT HARVEST</SectionLabel>
-            <h2 id="harvest-title">Four ways into the current harvest.</h2>
-            <p>Vivid Kiambu, floral Kayanza, tea-like Sidama, and the deeper fruit of Guji.</p>
-          </header>
-          <div className="harvest-wall">
-            {homeHarvest.map((coffee, index) => <ProductCard key={coffee.id} product={coffee} featured={index === 0} showQuickAction />)}
-          </div>
-          <Link className="editorial-link harvest-all-link" href="/shop#current-harvest">See all coffees <span aria-hidden="true">↗</span></Link>
+      <section className="home-material" aria-labelledby="material-title">
+        <Link href="/shop#material-series" className="home-material-stage">
+          {material.map((asset, index) => (
+            <span key={asset.id} className={`home-material-bag home-material-bag--${index + 1}`}><Image className="cut" src={asset.src} alt={asset.alt} width={444} height={680} sizes="(max-width: 820px) 30vw, 18vw" /></span>
+          ))}
+        </Link>
+        <div className="wrap home-material-caption">
+          <div><p className="mono muted">The Material Series</p><h2 id="material-title" className="serif">Laterite, Basalt, Linen — three house coffees.</h2></div>
+          <Link className="text-link" href="/shop#material-series">From KES 1,600</Link>
         </div>
+      </section>
+
+      <section className="wrap home-harvest" aria-labelledby="harvest-title">
+        <div className="section-head">
+          <div><p className="mono muted">Current Harvest</p><h2 id="harvest-title" className="serif display-m">Six coffees from three highland regions.</h2></div>
+          <Link className="text-link" href="/shop#current-harvest">Shop all coffee</Link>
+        </div>
+        <HarvestStatus />
+        <div className="grid-3">{harvest.map((product) => <ProductCard key={product.id} product={product} />)}</div>
       </section>
 
       <section className="home-origins" aria-labelledby="origins-title">
-        <header className="origins-intro page-container">
-          <SectionLabel>ORIGINS // 03 REGIONS</SectionLabel>
-          <h2 id="origins-title">Place changes the shape of every cup.</h2>
-        </header>
-
-        <article className="origin-beat origin-beat--kenya page-container" data-origin-beat>
-          <MediaFrame asset={redClayAssets.documentary.kiambuLead} className="origin-beat-primary" sizes="(max-width: 1023px) 100vw, 64vw" />
-          <MediaFrame asset={redClayAssets.origins.kenyaDetail} className="origin-beat-secondary" sizes="(max-width: 1023px) 44vw, 16vw" />
-          <div className="origin-beat-copy">
-            <span className="mono-label">01 / KENYA</span>
-            <h3>Central Kenya</h3>
-            <p>Cultivated highlands, washed-coffee traditions, and two Kenyan profiles built around vivid fruit.</p>
-            <Link className="editorial-link" href="/origins/central-kenya">Explore Central Kenya <span aria-hidden="true">↗</span></Link>
+        <div className="wrap home-origins-grid">
+          <div className="home-origins-intro">
+            <p className="mono muted">Origins</p>
+            <h2 id="origins-title" className="serif display-m">Three highland regions. Three ways into the coffee.</h2>
+            <Link className="text-link" href="/origins">Open The Earthen Folio</Link>
           </div>
-        </article>
-
-        <article className="origin-beat origin-beat--burundi page-container" data-origin-beat>
-          <MediaFrame asset={redClayAssets.origins.burundiLead} className="origin-beat-primary" sizes="(max-width: 1023px) 100vw, 58vw" />
-          <MediaFrame asset={redClayAssets.origins.burundiSupport} className="origin-beat-secondary" sizes="(max-width: 1023px) 44vw, 23vw" />
-          <div className="origin-beat-copy">
-            <span className="mono-label">02 / BURUNDI</span>
-            <h3>Kayanza / Burundi</h3>
-            <p>Steep coffee-growing hills, shared stations, careful drying, and two contrasting Kayanza profiles.</p>
-            <Link className="editorial-link" href="/origins/kayanza-burundi">Explore Kayanza <span aria-hidden="true">↗</span></Link>
-          </div>
-        </article>
-
-        <article className="origin-beat origin-beat--ethiopia page-container" data-origin-beat>
-          <MediaFrame asset={redClayAssets.origins.ethiopiaLead} className="origin-beat-primary" sizes="(max-width: 1023px) 100vw, 56vw" />
-          <MediaFrame asset={redClayAssets.origins.ethiopiaSupport} className="origin-beat-secondary" sizes="(max-width: 1023px) 44vw, 24vw" />
-          <div className="origin-beat-copy">
-            <span className="mono-label">03 / ETHIOPIA</span>
-            <h3>Southern Ethiopia</h3>
-            <p>Exceptional coffee diversity, represented here by a floral washed profile and a fruit-driven natural.</p>
-            <Link className="editorial-link" href="/origins/southern-ethiopia">Explore Southern Ethiopia <span aria-hidden="true">↗</span></Link>
-          </div>
-        </article>
-      </section>
-
-      <section className="home-edition" aria-labelledby="edition-title" data-edition>
-        <div className="edition-sticky">
-          <div className="edition-image-stage">
-            <MediaFrame asset={redClayAssets.origins.kenyaProcess} className="edition-image" sizes="100vw" />
-          </div>
-          <div className="edition-publication page-container">
-            <div className="edition-metadata"><SectionLabel>THE EDITIONS</SectionLabel><span className="mono-label">VOL. 01</span></div>
-            <div className="edition-title-block"><span className="mono-label">{featuredEdition.eyebrow}</span><h2 id="edition-title">{featuredEdition.title}</h2></div>
-            <div className="edition-deck"><p>{featuredEdition.cardDeck}</p><Link className="editorial-link" href={`/journal/${featuredEdition.slug}`}>Read {featuredEdition.title} <span aria-hidden="true">↗</span></Link></div>
-          </div>
+          {originsPreview.map((origin) => (
+            <Link key={origin.href} href={origin.href} className={origin.className}>
+              <span className="home-origin-media"><Image className="grade" src={origin.asset.src} alt={origin.asset.alt} fill sizes="(max-width: 820px) 100vw, 45vw" /></span>
+              <span className="home-origin-caption"><span className="serif">{origin.name}</span><span className="mono muted">{origin.meta}</span></span>
+            </Link>
+          ))}
         </div>
       </section>
 
-      <section className="home-ritual" aria-labelledby="ritual-title" data-quiet-reveal>
-        <div className="ritual-composition page-container">
-          <MediaFrame asset={redClayAssets.ritual.hands} className="ritual-primary" sizes="(max-width: 1023px) 100vw, 50vw" />
-          <div className="ritual-copy">
-            <SectionLabel>THE COMPANION OBJECT</SectionLabel>
-            <h2 id="ritual-title">A cup made for coffee.</h2>
-            <p>High-fired stoneware with exposed red clay and a mineral-white glaze, shaped for an everyday cup.</p>
-            <Link className="editorial-link" href="/shop/the-kiln-cup">View the Kiln Cup <span aria-hidden="true">↗</span></Link>
-          </div>
-          <MediaFrame asset={redClayAssets.materials.linen} className="ritual-material" sizes="(max-width: 1023px) 42vw, 18vw" />
-          <div className="ritual-object">
-            <ProductMediaPlaceholder assetId="SHOP-KILN-01" label="THE KILN CUP" kind="kiln-cup" />
-            <span className="mono-label">THE KILN CUP</span>
-          </div>
-        </div>
+      <section className="wrap home-edition" aria-labelledby="edition-title">
+        <Link href="/journal/water-and-time" className="home-edition-panel">
+          <Image className="grade" src={redClayAssets.documentary.homeProcess.src} alt={redClayAssets.documentary.homeProcess.alt} fill sizes="100vw" />
+          <span className="home-edition-scrim" aria-hidden="true" />
+          <span className="home-edition-copy">
+            <span className="mono">Edition 01 · Featured</span>
+            <span>
+              <span id="edition-title" className="serif home-edition-title">Water &amp; Time</span>
+              <span className="home-edition-dek">On washing, fermentation and the patience a washed coffee asks for, from Central Kenya.</span>
+              <span className="text-link">Read the Edition</span>
+            </span>
+            <span className="mono">Drying rack, Fairview Estate, Kiambu</span>
+          </span>
+        </Link>
       </section>
 
-      <section className="home-dispatch" aria-labelledby="dispatch-title">
-        <div className="dispatch-composition page-container">
-          <SectionLabel>THE EDITIONS // VOLUME 01 — PLACE</SectionLabel>
-          <div><h2 id="dispatch-title">Three questions worth following.</h2><p>Water and washing in Kenya, hillside work in Kayanza, and the limits of “heirloom” in Ethiopia.</p></div>
-          <Link className="editorial-link" href="/journal">See all Editions <span aria-hidden="true">↗</span></Link>
+      <section className="wrap home-kiln" aria-labelledby="kiln-title">
+        <div className="home-kiln-ritual"><Image className="grade" src={redClayAssets.ritual.pourOver.src} alt={redClayAssets.ritual.pourOver.alt} fill sizes="(max-width: 820px) 100vw, 33vw" /></div>
+        <div className="home-kiln-copy">
+          <p className="mono muted">Object · The Kiln Cup</p>
+          <h2 id="kiln-title" className="serif display-m">Clay outside. Glaze within.</h2>
+          <p>High-fired iron-rich stoneware with a warm mineral-white interior. A tapered body that holds about 300ml, made for the first cup of the day.</p>
+          <div className="button-row"><Link className="button" href="/shop/the-kiln-cup">Shop The Kiln Cup</Link><span>{formatKes(kilnCup.price)}</span></div>
         </div>
+        <div className="home-kiln-object"><Image src={redClayAssets.objects.kilnPlinth.src} alt={redClayAssets.objects.kilnPlinth.alt} fill sizes="(max-width: 820px) 100vw, 33vw" /></div>
       </section>
     </main>
-  </>;
+  );
 }

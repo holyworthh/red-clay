@@ -6,22 +6,40 @@ export type CoffeeId =
   | "LATERITE"
   | "BASALT"
   | "LINEN"
-  | "KIAMBU / WASHED 01"
-  | "KIRINYAGA / WASHED 02"
-  | "KAYANZA / WASHED 01"
-  | "KAYANZA / NATURAL 02"
-  | "SIDAMA / WASHED 01"
-  | "GUJI / NATURAL 02"
+  | "PLUM SEASON"
+  | "CANE LIGHT"
+  | "HONEY BLOOM"
+  | "RED ORCHARD"
+  | "JASMINE AIR"
+  | "BLUE HOUR"
   | "AFTERLIGHT"
   | "RED CLAY INSTANT — ETHIOPIA"
   | "THREE REGIONS";
 
 export type ProductId = CoffeeId | "THE KILN CUP";
 
-export type CoffeeMedia = {
-  shopPrimary: RedClayAsset;
-  shopAlternate?: RedClayAsset;
-  pdpHero: RedClayAsset;
+/** Keys for the drawn packaging system (see `PackageArt` and `ObjectArt`). */
+export type PackageKey =
+  | "laterite"
+  | "basalt"
+  | "linen"
+  | "plum-season"
+  | "cane-light"
+  | "honey-bloom"
+  | "red-orchard"
+  | "jasmine-air"
+  | "blue-hour"
+  | "afterlight";
+
+export type ProductArt =
+  | { type: "bag"; key: PackageKey }
+  | { type: "object"; key: "instant" | "regions" | "kiln" };
+
+export type ProductMedia = {
+  /** A real packshot or product photograph, used before the drawn art when present. */
+  photo?: RedClayAsset;
+  /** A second real photograph, used for galleries and hover states. */
+  alternatePhoto?: RedClayAsset;
   origin?: RedClayAsset;
   process?: RedClayAsset;
   secondaryProcess?: RedClayAsset;
@@ -31,13 +49,17 @@ export type CoffeeMedia = {
 
 type ProductBase = {
   id: ProductId;
+  name: string;
   slug: string;
+  lotCode: string;
   family: ProductFamily;
   role: string;
   origin: string;
   region: string;
   country?: string;
   process?: string;
+  varieties?: string;
+  roast?: string;
   sensoryStatement: string;
   character: string;
   notes: string[];
@@ -58,7 +80,8 @@ type ProductBase = {
   currency: string | null;
   availability: string | null;
   isActive: true;
-  media: CoffeeMedia;
+  art: ProductArt;
+  media: ProductMedia;
 };
 
 export type Coffee = ProductBase & {
@@ -75,10 +98,6 @@ export type ObjectProduct = ProductBase & {
 
 export type Product = Coffee | ObjectProduct;
 
-const media = (primary: RedClayAsset, support: Omit<CoffeeMedia, "shopPrimary" | "pdpHero"> = {}): CoffeeMedia => {
-  return { shopPrimary: primary, pdpHero: primary, ...support };
-};
-
 const baseCommerce = {
   price: null,
   currency: "KES",
@@ -86,10 +105,14 @@ const baseCommerce = {
   isActive: true,
 } as const;
 
+const bag = (key: PackageKey): ProductArt => ({ type: "bag", key });
+
 export const materialSeries: Coffee[] = [
   {
     ...baseCommerce,
     id: "LATERITE",
+    name: "Laterite",
+    lotCode: "RC / MS / 01",
     price: 1600,
     slug: "laterite",
     kind: "coffee",
@@ -109,12 +132,15 @@ export const materialSeries: Coffee[] = [
     placeHeading: "A familiar profile through the seasons.",
     placeCopy: "The East African components can change with the harvest. The cup stays centred on red plum, brown sugar, and cacao.",
     comparison: "Choose Basalt for more body and espresso. Choose Linen for a lighter, more floral filter coffee.",
-    relatedProducts: ["BASALT", "LINEN", "KIAMBU / WASHED 01"],
-    media: media(redClayAssets.pending.laterite),
+    relatedProducts: ["BASALT", "LINEN", "PLUM SEASON"],
+    art: bag("laterite"),
+    media: { photo: redClayAssets.products.materialLaterite, alternatePhoto: redClayAssets.materials.clay },
   },
   {
     ...baseCommerce,
     id: "BASALT",
+    name: "Basalt",
+    lotCode: "RC / MS / 02",
     price: 1700,
     slug: "basalt",
     kind: "coffee",
@@ -134,12 +160,15 @@ export const materialSeries: Coffee[] = [
     placeHeading: "Depth without losing the fruit.",
     placeCopy: "The seasonal composition can change while the intended profile remains steady: dark cherry, cacao, and molasses with a rounder texture.",
     comparison: "Choose Laterite for greater versatility. Choose Linen when you want the lightest coffee in the house collection.",
-    relatedProducts: ["LATERITE", "KAYANZA / NATURAL 02", "GUJI / NATURAL 02"],
-    media: media(redClayAssets.pending.basalt),
+    relatedProducts: ["LATERITE", "RED ORCHARD", "BLUE HOUR"],
+    art: bag("basalt"),
+    media: { photo: redClayAssets.products.materialBasalt, alternatePhoto: redClayAssets.materials.stone },
   },
   {
     ...baseCommerce,
     id: "LINEN",
+    name: "Linen",
+    lotCode: "RC / MS / 03",
     price: 1800,
     slug: "linen",
     kind: "coffee",
@@ -159,17 +188,20 @@ export const materialSeries: Coffee[] = [
     placeHeading: "The lightest house profile.",
     placeCopy: "Its East African components can rotate with the season. Pear, bergamot, and jasmine keep the profile aromatic, clean, and recognisable.",
     comparison: "Choose Laterite for more balance and versatility. Choose Basalt for more body, espresso, or milk.",
-    relatedProducts: ["LATERITE", "SIDAMA / WASHED 01", "KIRINYAGA / WASHED 02"],
-    media: media(redClayAssets.pending.linen),
+    relatedProducts: ["LATERITE", "JASMINE AIR", "CANE LIGHT"],
+    art: bag("linen"),
+    media: { photo: redClayAssets.products.materialLinen },
   },
 ];
 
 export const currentHarvest: Coffee[] = [
   {
     ...baseCommerce,
-    id: "KIAMBU / WASHED 01",
+    id: "PLUM SEASON",
+    name: "Plum Season",
+    lotCode: "RC / CH / 01",
     price: 1950,
-    slug: "kiambu-washed-01",
+    slug: "plum-season",
     kind: "coffee",
     family: "current-harvest",
     role: "Current Harvest",
@@ -177,38 +209,42 @@ export const currentHarvest: Coffee[] = [
     region: "Kiambu, Kenya",
     country: "Kenya",
     process: "Washed",
-    sensoryStatement: "A bright Kenyan coffee built around blackcurrant, plum, and clear cane-sugar sweetness.",
+    varieties: "SL28 / SL34 / Ruiru 11",
+    roast: "Light",
+    sensoryStatement: "Blackcurrant first, then plum, settling into cane sugar as it cools.",
     character: "Bright · Structured · Clear",
     notes: ["Blackcurrant", "plum", "cane sugar"],
-    shortDescription: "Vivid fruit and clean sweetness.",
-    customerDirection: "Choose Kiambu for darker fruit, structured acidity, and a precise cup.",
+    shortDescription: "Blackcurrant, plum and cane sugar. A washed Kenyan coffee with clean structure and a long, dark-fruited finish.",
+    customerDirection: "Choose Plum Season for darker fruit, structured acidity, and a precise cup.",
     formats: ["250G"],
     grinds: ["Whole Bean", "Filter Grind"],
-    uses: [],
+    uses: ["Pour-over", "Batch"],
     placeHeading: "Kiambu, read through water and selection.",
     placeCopy: "This washed profile moves through blackcurrant and plum toward clear cane-sugar sweetness. Selection, washing, and drying are part of the context, but no one variable explains the whole cup.",
-    comparison: "Kiambu is darker-fruited and more structured. Kirinyaga / Washed 02 is brighter, more floral, and more citrus-led.",
+    comparison: "Plum Season is darker-fruited and more structured. Cane Light is brighter, more floral, and more citrus-led.",
     relatedOrigin: "central-kenya",
     relatedEdition: "water-and-time",
-    relatedProducts: ["KIRINYAGA / WASHED 02", "LATERITE", "KAYANZA / WASHED 01"],
-    media: media(redClayAssets.pending.kiambuWashed01, {
-      shopAlternate: redClayAssets.origins.kenyaDetail,
-      origin: redClayAssets.origins.kenyaLead,
-      process: redClayAssets.origins.kenyaProcess,
-      secondaryProcess: redClayAssets.origins.kenyaDrying,
+    relatedProducts: ["CANE LIGHT", "HONEY BLOOM", "JASMINE AIR"],
+    art: bag("plum-season"),
+    media: {
+      alternatePhoto: redClayAssets.documentary.kiambuCherryDetail,
+      origin: redClayAssets.documentary.kiambuLead,
+      process: redClayAssets.documentary.homeProcess,
+      secondaryProcess: redClayAssets.documentary.kiambuSupport,
       botanical: redClayAssets.origins.kenyaDetail,
       documentarySupport: [
-        { asset: redClayAssets.documentary.homeProcess, caption: "Coffee drying on raised racks at Fairview Estate in Kiambu, Kenya." },
         { asset: redClayAssets.documentary.kenyaWashingInfrastructure, caption: "Inactive coffee washing pits at Fairview Estate in Kiambu, Kenya; this frame does not show active washing." },
-        { asset: redClayAssets.documentary.kenyaDryingTexture, caption: "Coffee drying texture at Fairview Estate in Kiambu, Kenya; a detail plate, not packaging imagery." },
+        { asset: redClayAssets.documentary.kenyaDryingTexture, caption: "Coffee drying texture at Fairview Estate in Kiambu, Kenya." },
       ],
-    }),
+    },
   },
   {
     ...baseCommerce,
-    id: "KIRINYAGA / WASHED 02",
+    id: "CANE LIGHT",
+    name: "Cane Light",
+    lotCode: "RC / CH / 02",
     price: 2100,
-    slug: "kirinyaga-washed-02",
+    slug: "cane-light",
     kind: "coffee",
     family: "current-harvest",
     role: "Current Harvest",
@@ -216,27 +252,37 @@ export const currentHarvest: Coffee[] = [
     region: "Kirinyaga, Kenya",
     country: "Kenya",
     process: "Washed",
-    sensoryStatement: "A lifted Kenyan coffee moving from red currant into hibiscus and pomelo.",
+    varieties: "SL28 / SL34 / Batian",
+    roast: "Light",
+    sensoryStatement: "Red currant first, opening into hibiscus and a pomelo finish.",
     character: "Floral · Bright · Citrus-led",
     notes: ["Red currant", "hibiscus", "pomelo"],
-    shortDescription: "The more lifted of the two Kenyan coffees.",
-    customerDirection: "Choose Kirinyaga for brighter florals and a sharper citrus line.",
+    shortDescription: "Red currant, hibiscus and pomelo. The more lifted of the two Kenyan coffees.",
+    customerDirection: "Choose Cane Light for brighter florals and a sharper citrus line.",
     formats: ["250G"],
     grinds: ["Whole Bean", "Filter Grind"],
-    uses: [],
+    uses: ["Pour-over", "Batch"],
     placeHeading: "A brighter Kenyan direction.",
     placeCopy: "Red currant, hibiscus, and pomelo make this the more lifted Kenyan profile in the Current Harvest.",
-    comparison: "Kirinyaga is brighter, more floral, and more citrus-led. Kiambu / Washed 01 brings darker fruit and firmer structure.",
+    comparison: "Cane Light is brighter, more floral, and more citrus-led. Plum Season brings darker fruit and firmer structure.",
     relatedOrigin: "central-kenya",
     relatedEdition: "water-and-time",
-    relatedProducts: ["KIAMBU / WASHED 01", "LINEN", "SIDAMA / WASHED 01"],
-    media: media(redClayAssets.pending.kirinyagaWashed02),
+    relatedProducts: ["PLUM SEASON", "LINEN", "JASMINE AIR"],
+    art: bag("cane-light"),
+    media: {
+      alternatePhoto: redClayAssets.origins.kenyaDetail,
+      origin: redClayAssets.documentary.kiambuSupport,
+      process: redClayAssets.origins.kenyaProcess,
+      botanical: redClayAssets.documentary.kiambuCultivation,
+    },
   },
   {
     ...baseCommerce,
-    id: "KAYANZA / WASHED 01",
+    id: "HONEY BLOOM",
+    name: "Honey Bloom",
+    lotCode: "RC / CH / 03",
     price: 1900,
-    slug: "kayanza-washed-01",
+    slug: "honey-bloom",
     kind: "coffee",
     family: "current-harvest",
     role: "Current Harvest",
@@ -244,32 +290,37 @@ export const currentHarvest: Coffee[] = [
     region: "Kayanza, Burundi",
     country: "Burundi",
     process: "Washed",
-    sensoryStatement: "Red apple, honey, and orange blossom in a soft, lifted Burundi cup.",
+    varieties: "Red Bourbon",
+    roast: "Light",
+    sensoryStatement: "Red apple and honey, lifting into orange blossom on the finish.",
     character: "Floral · Soft · Honeyed",
     notes: ["Red apple", "honey", "orange blossom"],
-    shortDescription: "Softer fruit and floral sweetness.",
-    customerDirection: "Choose the washed Kayanza for floral sweetness and a cleaner cup.",
+    shortDescription: "Red apple, honey and orange blossom. The softer, more floral Kayanza coffee.",
+    customerDirection: "Choose Honey Bloom for floral sweetness and a cleaner cup.",
     formats: ["250G"],
     grinds: ["Whole Bean", "Filter Grind"],
-    uses: [],
+    uses: ["Pour-over", "Batch"],
     placeHeading: "A softer reading of Kayanza.",
     placeCopy: "This washed profile brings red apple, honey, and orange blossom into a cleaner, more floral line.",
-    comparison: "The washed coffee is cleaner, floral, and honeyed. Kayanza / Natural 02 is fruitier, rounder, and deeper.",
+    comparison: "Honey Bloom is cleaner, floral, and honeyed. Red Orchard is fruitier, rounder, and deeper.",
     relatedOrigin: "kayanza-burundi",
     relatedEdition: "along-the-kayanza-hills",
-    relatedProducts: ["KAYANZA / NATURAL 02", "LATERITE", "SIDAMA / WASHED 01"],
-    media: media(redClayAssets.pending.kayanzaWashed01, {
-      shopAlternate: redClayAssets.origins.burundiBotanical,
+    relatedProducts: ["RED ORCHARD", "LATERITE", "JASMINE AIR"],
+    art: bag("honey-bloom"),
+    media: {
+      alternatePhoto: redClayAssets.origins.burundiLead,
       origin: redClayAssets.origins.burundiLead,
-      process: redClayAssets.origins.burundiSupport,
+      process: redClayAssets.origins.burundiLead,
       botanical: redClayAssets.origins.burundiBotanical,
-    }),
+    },
   },
   {
     ...baseCommerce,
-    id: "KAYANZA / NATURAL 02",
+    id: "RED ORCHARD",
+    name: "Red Orchard",
+    lotCode: "RC / CH / 04",
     price: 2050,
-    slug: "kayanza-natural-02",
+    slug: "red-orchard",
     kind: "coffee",
     family: "current-harvest",
     role: "Current Harvest",
@@ -277,32 +328,37 @@ export const currentHarvest: Coffee[] = [
     region: "Kayanza, Burundi",
     country: "Burundi",
     process: "Natural",
-    sensoryStatement: "A fruit-forward Kayanza coffee with raspberry, black tea, and brown-sugar depth.",
+    varieties: "Red Bourbon",
+    roast: "Light",
+    sensoryStatement: "Raspberry over black tea, with brown-sugar depth underneath.",
     character: "Fruit-forward · Round · Deep",
     notes: ["Raspberry", "black tea", "brown sugar"],
-    shortDescription: "The deeper, fruitier Kayanza release.",
-    customerDirection: "Choose the natural Kayanza for rounder fruit and deeper sweetness.",
+    shortDescription: "Raspberry, black tea and brown sugar. The deeper, fruitier Kayanza coffee.",
+    customerDirection: "Choose Red Orchard for rounder fruit and deeper sweetness.",
     formats: ["250G"],
     grinds: ["Whole Bean", "Filter Grind"],
-    uses: [],
+    uses: ["Pour-over", "Batch"],
     placeHeading: "The deeper Kayanza profile.",
     placeCopy: "Raspberry, black tea, and brown sugar give this coffee a rounder, fruit-forward direction. Process is one part of the contrast, not its only cause.",
-    comparison: "The natural is fruitier, rounder, and deeper. Kayanza / Washed 01 is cleaner, more floral, and honeyed.",
+    comparison: "Red Orchard is fruitier, rounder, and deeper. Honey Bloom is cleaner, more floral, and honeyed.",
     relatedOrigin: "kayanza-burundi",
     relatedEdition: "along-the-kayanza-hills",
-    relatedProducts: ["KAYANZA / WASHED 01", "BASALT", "GUJI / NATURAL 02"],
-    media: media(redClayAssets.pending.kayanzaNatural02, {
-      shopAlternate: redClayAssets.origins.burundiBotanical,
-      origin: redClayAssets.origins.burundiLead,
-      process: redClayAssets.origins.burundiSupport,
+    relatedProducts: ["HONEY BLOOM", "BASALT", "BLUE HOUR"],
+    art: bag("red-orchard"),
+    media: {
+      alternatePhoto: redClayAssets.origins.burundiBotanical,
+      origin: redClayAssets.origins.burundiSupport,
+      process: redClayAssets.origins.burundiLead,
       botanical: redClayAssets.origins.burundiBotanical,
-    }),
+    },
   },
   {
     ...baseCommerce,
-    id: "SIDAMA / WASHED 01",
+    id: "JASMINE AIR",
+    name: "Jasmine Air",
+    lotCode: "RC / CH / 05",
     price: 2100,
-    slug: "sidama-washed-01",
+    slug: "jasmine-air",
     kind: "coffee",
     family: "current-harvest",
     role: "Current Harvest",
@@ -310,31 +366,37 @@ export const currentHarvest: Coffee[] = [
     region: "Sidama, Ethiopia",
     country: "Ethiopia",
     process: "Washed",
-    sensoryStatement: "A clean, floral Ethiopian coffee with jasmine, yellow peach, and a tea-like finish.",
+    varieties: "Ethiopian landrace selections",
+    roast: "Light",
+    sensoryStatement: "Jasmine and yellow peach, finishing like lemon tea.",
     character: "Floral · Clean · Tea-like",
     notes: ["Jasmine", "yellow peach", "lemon tea"],
-    shortDescription: "The lighter of the two Ethiopian coffees.",
-    customerDirection: "Choose Sidama for florality, lighter body, and a tea-like finish.",
+    shortDescription: "Jasmine, yellow peach and lemon tea. The lighter of the two Ethiopian coffees.",
+    customerDirection: "Choose Jasmine Air for florality, lighter body, and a tea-like finish.",
     formats: ["250G"],
     grinds: ["Whole Bean", "Filter Grind"],
-    uses: [],
+    uses: ["Pour-over", "Batch"],
     placeHeading: "A light, aromatic Ethiopian profile.",
     placeCopy: "Jasmine, yellow peach, and lemon tea give this washed Sidama coffee a clean, high-toned direction. Region and process help describe the coffee; neither predicts the cup by itself.",
-    comparison: "Sidama is floral, tea-like, and lighter. Guji / Natural 02 is fruit-driven, rounder, and deeper.",
+    comparison: "Jasmine Air is floral, tea-like, and lighter. Blue Hour is fruit-driven, rounder, and deeper.",
     relatedOrigin: "southern-ethiopia",
     relatedEdition: "beyond-heirloom",
-    relatedProducts: ["GUJI / NATURAL 02", "LINEN", "KIAMBU / WASHED 01"],
-    media: media(redClayAssets.pending.sidamaWashed01, {
+    relatedProducts: ["BLUE HOUR", "LINEN", "PLUM SEASON"],
+    art: bag("jasmine-air"),
+    media: {
+      alternatePhoto: redClayAssets.origins.ethiopiaLead,
       origin: redClayAssets.origins.ethiopiaLead,
-      process: redClayAssets.origins.ethiopiaSupport,
-      secondaryProcess: redClayAssets.origins.ethiopiaDetail,
-    }),
+      process: redClayAssets.origins.ethiopiaDetail,
+      secondaryProcess: redClayAssets.origins.ethiopiaSupport,
+    },
   },
   {
     ...baseCommerce,
-    id: "GUJI / NATURAL 02",
+    id: "BLUE HOUR",
+    name: "Blue Hour",
+    lotCode: "RC / CH / 06",
     price: 2200,
-    slug: "guji-natural-02",
+    slug: "blue-hour",
     kind: "coffee",
     family: "current-harvest",
     role: "Current Harvest",
@@ -342,26 +404,29 @@ export const currentHarvest: Coffee[] = [
     region: "Guji, Ethiopia",
     country: "Ethiopia",
     process: "Natural",
-    sensoryStatement: "A fruit-driven Ethiopian natural with strawberry, apricot, and cacao-nib depth.",
+    varieties: "Ethiopian landrace selections",
+    roast: "Light",
+    sensoryStatement: "Strawberry and apricot, grounded by cacao nib.",
     character: "Fruit-driven · Round · Saturated",
     notes: ["Strawberry", "apricot", "cacao nib"],
-    shortDescription: "Riper fruit and deeper sweetness.",
-    customerDirection: "Choose Guji for rounder fruit, more weight, and deeper sweetness.",
+    shortDescription: "Strawberry, apricot and cacao nib. The rounder, more saturated Ethiopian coffee.",
+    customerDirection: "Choose Blue Hour for rounder fruit, more weight, and deeper sweetness.",
     formats: ["250G"],
     grinds: ["Whole Bean", "Filter Grind"],
-    uses: [],
+    uses: ["Pour-over", "Batch"],
     placeHeading: "A fuller Ethiopian direction.",
     placeCopy: "Strawberry, apricot, and cacao nib make this the rounder, more saturated Ethiopian profile. Whole-cherry drying is one variable within a much larger coffee context.",
-    comparison: "Guji is fruit-driven, rounder, and deeper. Sidama / Washed 01 is floral, tea-like, and lighter.",
+    comparison: "Blue Hour is fruit-driven, rounder, and deeper. Jasmine Air is floral, tea-like, and lighter.",
     relatedOrigin: "southern-ethiopia",
     relatedEdition: "beyond-heirloom",
-    relatedProducts: ["SIDAMA / WASHED 01", "BASALT", "KAYANZA / NATURAL 02"],
-    media: media(redClayAssets.pending.gujiNatural02, {
-      shopAlternate: redClayAssets.origins.ethiopiaDetail,
-      origin: redClayAssets.origins.ethiopiaLead,
-      process: redClayAssets.origins.ethiopiaDetail,
-      secondaryProcess: redClayAssets.origins.ethiopiaSupport,
-    }),
+    relatedProducts: ["JASMINE AIR", "BASALT", "RED ORCHARD"],
+    art: bag("blue-hour"),
+    media: {
+      alternatePhoto: redClayAssets.origins.ethiopiaSupport,
+      origin: redClayAssets.documentary.ethiopiaChecking,
+      process: redClayAssets.origins.ethiopiaSupport,
+      secondaryProcess: redClayAssets.origins.ethiopiaDetail,
+    },
   },
 ];
 
@@ -369,6 +434,8 @@ export const otherWaysToDrink: Coffee[] = [
   {
     ...baseCommerce,
     id: "AFTERLIGHT",
+    name: "Afterlight",
+    lotCode: "RC / OW / 01",
     price: 2200,
     slug: "afterlight",
     kind: "coffee",
@@ -377,24 +444,28 @@ export const otherWaysToDrink: Coffee[] = [
     origin: "Ethiopia",
     region: "Ethiopia Decaf",
     country: "Ethiopia",
-    sensoryStatement: "Plum, cocoa, and honey for the cup that comes after the day has slowed down.",
+    process: "Water-process decaf",
+    roast: "Medium-light",
+    sensoryStatement: "All of the evening, none of the caffeine.",
     character: "Sweet · Round · Decaffeinated",
     notes: ["Plum", "cocoa", "honey"],
-    shortDescription: "A serious decaf with sweetness, body, and a full place in the collection.",
+    shortDescription: "Plum, cocoa and honey. An Ethiopian decaf for the evening cup, roasted a touch further than our light coffees.",
     customerDirection: "Choose Afterlight when you want the depth of a Red Clay coffee without the usual caffeine.",
     formats: ["250G"],
     grinds: ["Whole Bean", "Filter Grind", "Espresso Grind"],
-    process: "Water-process decaf",
     uses: ["Filter", "Espresso"],
-    placeHeading: "Decaf without the apology.",
-    placeCopy: "Afterlight keeps the focus on the cup: plum, cocoa, honey, and a rounded finish.",
+    placeHeading: "For the last cup of the day.",
+    placeCopy: "Brew it as you would any filter coffee. Decaffeination happens before roasting, so the cup keeps its fruit and sweetness.",
     comparison: "Choose Laterite for a caffeinated all-rounder. Choose Basalt for more espresso weight and deeper sweetness.",
-    relatedProducts: ["LATERITE", "BASALT", "RED CLAY INSTANT — ETHIOPIA"],
-    media: media(redClayAssets.pending.afterlight),
+    relatedProducts: ["JASMINE AIR", "LATERITE", "BLUE HOUR"],
+    art: bag("afterlight"),
+    media: { alternatePhoto: redClayAssets.ritual.pourOver },
   },
   {
     ...baseCommerce,
     id: "RED CLAY INSTANT — ETHIOPIA",
+    name: "Red Clay Instant — Ethiopia",
+    lotCode: "RC / OW / 02",
     price: 2300,
     slug: "red-clay-instant",
     kind: "coffee",
@@ -403,23 +474,26 @@ export const otherWaysToDrink: Coffee[] = [
     origin: "Ethiopia",
     region: "Ethiopia · 6 sachets",
     country: "Ethiopia",
-    sensoryStatement: "Good coffee when the grinder, scale, and brewer are not coming with you.",
+    sensoryStatement: "Specialty coffee that travels in a pocket.",
     character: "Direct · Portable · Ready",
     notes: [],
-    shortDescription: "Six single-serve sachets for travel, work, or a simpler cup.",
+    shortDescription: "For the road, the office and the morning without a grinder. One sachet, one cup of hot water.",
     customerDirection: "Choose Instant when convenience matters more than bringing the full brew setup.",
     formats: ["6 SACHETS"],
     grinds: [],
     uses: ["Travel", "Office"],
-    placeHeading: "A simpler route to the cup.",
-    placeCopy: "Add hot water and drink it where a grinder, scale, and brewer are not practical.",
+    placeHeading: "Tear, pour, stir.",
+    placeCopy: "Empty one sachet into a cup, add hot water and stir. Adjust the water to taste.",
     comparison: "Choose Three Regions when you want to compare three brewed coffees. Choose Afterlight when caffeine is the deciding factor.",
-    relatedProducts: ["THREE REGIONS", "AFTERLIGHT", "LATERITE"],
-    media: media(redClayAssets.pending.instantEthiopia),
+    relatedProducts: ["AFTERLIGHT", "JASMINE AIR", "BLUE HOUR"],
+    art: { type: "object", key: "instant" },
+    media: { alternatePhoto: redClayAssets.ritual.hands },
   },
   {
     ...baseCommerce,
     id: "THREE REGIONS",
+    name: "Three Regions",
+    lotCode: "RC / OW / 03",
     price: 2800,
     slug: "three-regions",
     kind: "coffee",
@@ -427,63 +501,62 @@ export const otherWaysToDrink: Coffee[] = [
     role: "Discovery Box",
     origin: "Kenya · Burundi · Ethiopia",
     region: "Discovery Box · 3 × 100G",
-    sensoryStatement: "Taste the collection by place before choosing a full bag.",
+    process: "All washed",
+    roast: "Light",
+    sensoryStatement: "Same process, three places. The clearest way to hear what region means in a cup.",
     character: "Bright · Soft · Aromatic",
-    notes: ["Kiambu", "Kayanza", "Sidama"],
-    shortDescription: "Three 100g coffees selected to make regional comparison straightforward.",
+    notes: ["Plum Season", "Honey Bloom", "Jasmine Air"],
+    shortDescription: "Taste the collection by place before choosing a full bag. One coffee each from Central Kenya, Kayanza and Southern Ethiopia.",
     customerDirection: "Start here if you do not yet know which regional profile suits you.",
     formats: ["3 × 100G"],
     grinds: ["Whole Bean", "Filter Grind"],
     uses: ["Filter comparison"],
-    placeHeading: "Three clear starting points.",
-    placeCopy: "You do not need to understand every process or region before choosing coffee. Brew the three coffees side by side or move through them one at a time.",
-    comparison: "Kiambu is bright and structured. Kayanza is soft and floral. Sidama is light and aromatic.",
-    relatedProducts: ["KIAMBU / WASHED 01", "KAYANZA / WASHED 01", "SIDAMA / WASHED 01"],
+    placeHeading: "Inside the box.",
+    placeCopy: "Brew all three the same way, taste them side by side, then choose a full bag from the region that held your attention.",
+    comparison: "Plum Season is bright and structured. Honey Bloom is soft and floral. Jasmine Air is light and aromatic.",
+    relatedProducts: ["PLUM SEASON", "HONEY BLOOM", "JASMINE AIR"],
     discoveryGuide: [
-      { name: "KIAMBU", direction: "Bright · Structured" },
-      { name: "KAYANZA", direction: "Soft · Floral" },
-      { name: "SIDAMA", direction: "Light · Aromatic" },
+      { name: "PLUM SEASON", direction: "Kiambu, Kenya · Bright · Structured" },
+      { name: "HONEY BLOOM", direction: "Kayanza, Burundi · Soft · Floral" },
+      { name: "JASMINE AIR", direction: "Sidama, Ethiopia · Light · Aromatic" },
     ],
-    media: media(redClayAssets.pending.threeRegions),
+    art: { type: "object", key: "regions" },
+    media: {},
   },
 ];
 
 export const kilnCup: ObjectProduct = {
   ...baseCommerce,
   id: "THE KILN CUP",
+  name: "The Kiln Cup",
+  lotCode: "Object",
   price: 5900,
   slug: "the-kiln-cup",
   kind: "kiln-cup",
   family: "object",
   role: "Companion object",
   origin: "High-fired stoneware",
-  region: "High-fired stoneware",
-  sensoryStatement: "Clay outside. Glaze within.",
+  region: "Iron-rich stoneware",
+  sensoryStatement: "Made to be used every morning, and never more important than the coffee in it.",
   character: "Exposed red clay · Mineral-white satin glaze",
   notes: ["Exposed red clay", "mineral-white satin glaze"],
-  shortDescription: "A gently tapered stoneware cup made for filter coffee, long black, and the everyday brew.",
+  shortDescription: "Clay outside. Glaze within. A compact cup for the first coffee of the day, with an exposed red exterior and a warm white interior.",
   customerDirection: "Choose the coffee first. The Kiln Cup remains its companion.",
-  formats: ["Approx. 300ML / 10OZ"],
+  formats: ["Approx. 300ML"],
   grinds: [],
   uses: ["Filter coffee", "Long black", "Everyday coffee"],
-  placeHeading: "Built around the daily brew.",
+  placeHeading: "A compact, gently tapered cup.",
   placeCopy: "The form is a gently tapered, handleless cup, with an exposed red clay exterior and a warm mineral-white satin glaze inside.",
   comparison: "Pair it with Laterite for balance, Linen for a lighter filter, or a coffee from the Current Harvest.",
-  relatedProducts: ["LATERITE", "LINEN", "KIAMBU / WASHED 01"],
-  media: media(redClayAssets.pending.kilnCup),
+  relatedProducts: ["LATERITE", "PLUM SEASON", "AFTERLIGHT"],
+  art: { type: "object", key: "kiln" },
+  media: { photo: redClayAssets.objects.kilnPlinth, alternatePhoto: redClayAssets.objects.kilnRakingLight },
 };
 
 export const coffees: Coffee[] = [...materialSeries, ...currentHarvest, ...otherWaysToDrink];
 export const objects: ObjectProduct[] = [kilnCup];
 export const allActiveProducts: Product[] = [...coffees, ...objects];
 export const products = allActiveProducts;
-
-export const legacyProductSlugs = {
-  "kenya-lot-01": "kiambu-washed-01",
-  "burundi-lot-01": "kayanza-washed-01",
-  "ethiopia-lot-01": "sidama-washed-01",
-  "ethiopia-lot-02": "guji-natural-02",
-} as const;
 
 export function getProductBySlug(slug: string) {
   return allActiveProducts.find((product) => product.slug === slug);
@@ -497,7 +570,25 @@ export function getProductVariantPrice(product: Product, variant: { format?: str
   return product.formatPrices?.[variant.format ?? product.formats[0]] ?? product.price;
 }
 
-export function formatPrice(price: number | null, currency: string | null) {
-  if (price === null || currency === null) return null;
-  return new Intl.NumberFormat("en", { style: "currency", currency }).format(price);
+export function formatKes(value: number | null | undefined) {
+  if (value == null) return "KES —";
+  return `KES ${new Intl.NumberFormat("en-KE", { maximumFractionDigits: 0 }).format(value)}`;
+}
+
+/** "250G" → "250 g", "1KG" → "1 kg", "3 × 100G" → "3 × 100 g"; other formats read as written. */
+export function formatLabel(format?: string) {
+  if (!format) return "";
+  return format.replace(/(\d)KG$/, "$1 kg").replace(/(\d)G$/, "$1 g");
+}
+
+export function priceLabel(product: Product) {
+  const values = product.formatPrices ? Object.values(product.formatPrices) : [];
+  if (values.length > 1) return `From ${formatKes(Math.min(...values))}`;
+  return formatKes(product.price);
+}
+
+/** "Kiambu, Kenya · Washed" for harvest coffees, the role otherwise. */
+export function productMeta(product: Product) {
+  if (product.family === "current-harvest") return `${product.region} · ${product.process}`;
+  return product.role;
 }

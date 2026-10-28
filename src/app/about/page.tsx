@@ -1,19 +1,106 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
-import { MediaFrame } from "@/components/editorial/MediaFrame";
-import { PageContainer, SectionLabel } from "@/components/layout/PageContainer";
+import { formatKes, kilnCup } from "@/content/coffees";
 import { redClayAssets } from "@/lib/assets/registry";
 
-export const metadata: Metadata = { title: "About", description: "Red Clay is a contemporary African coffee house built around coffee, place, and thoughtful hospitality." };
+export const metadata: Metadata = { title: "About", description: "Red Clay is a contemporary African coffee house in Nairobi, built around coffee, place, and objects for daily use." };
+
+const steps = [
+  { id: "earth", n: "01", name: "Earth" },
+  { id: "coffee", n: "02", name: "Coffee" },
+  { id: "vessel", n: "03", name: "Vessel" },
+  { id: "ritual", n: "04", name: "Ritual" },
+];
+
+const principles = [
+  { n: "01", t: "Clarity before spectacle.", d: "We choose coffees and roast them to be read clearly in the cup, not to impress on the first sip." },
+  { n: "02", t: "Place is context, not a guarantee.", d: "A region, a variety or a process tells you something real. None of them predicts the cup on its own, and we don’t pretend otherwise." },
+  { n: "03", t: "Say only what we know.", d: "No invented producer quotes, no unsupported sourcing claims. When something is unverified, we leave it out." },
+  { n: "04", t: "Objects for daily use.", d: "One cup, made to be used every morning. Coffee comes first; the object serves it." },
+];
 
 export default function AboutPage() {
-  return <main id="main-content" className="about-page">
-    <section className="about-opening page-container"><div><SectionLabel>WHAT RED CLAY IS</SectionLabel><h1>A coffee house built around the material character of place.</h1></div><div className="about-opening-copy"><SectionLabel>WHY THE NAME</SectionLabel><p>The earth underfoot and the fired vessel in your hand. Red Clay follows the connection between coffee, place, and the cup used to drink it.</p></div></section>
-    <section className="about-continuum" aria-labelledby="about-continuum-title"><PageContainer><div className="about-continuum-heading"><SectionLabel>THE CONTINUUM</SectionLabel><h2 id="about-continuum-title">Earth → Coffee → Vessel → Ritual</h2></div><ol className="about-continuum-list"><li><span className="about-continuum-number">01</span><h3>Earth</h3><p>The conditions and knowledge behind a coffee.</p></li><li><span className="about-continuum-connector" aria-hidden="true">→</span><span className="about-continuum-number">02</span><h3>Coffee</h3><p>Specific profiles, seasons, and ways to drink.</p></li><li><span className="about-continuum-connector" aria-hidden="true">→</span><span className="about-continuum-number">03</span><h3>Vessel</h3><p>The Kiln Cup, made to serve coffee.</p></li><li><span className="about-continuum-connector" aria-hidden="true">→</span><span className="about-continuum-number">04</span><h3>Ritual</h3><p>Brewing as a practical, repeatable pleasure.</p></li></ol></PageContainer></section>
-    <section className="about-origins page-container"><div className="about-origins-copy"><SectionLabel>WHY EAST AFRICAN ORIGINS</SectionLabel><h2>Three regions, understood on their own terms.</h2><p>Central Kenya, Kayanza / Burundi, and Southern Ethiopia each bring different growing histories, working landscapes, and ways of processing coffee. Origins gives those differences room to be useful.</p><Link className="editorial-link" href="/origins">Explore Origins <span aria-hidden="true">↗</span></Link></div><MediaFrame asset={redClayAssets.origins.kenyaProcess} className="about-origins-media" sizes="(max-width: 767px) 100vw, 56vw" /></section>
-    <section className="about-agency"><PageContainer><div className="about-agency-grid"><div><SectionLabel>KNOWLEDGE / WORK</SectionLabel><h2>Coffee is knowledge in practice.</h2></div><p>Growing, selecting, processing, and drying coffee depend on skilled decisions. Red Clay’s origin stories focus on that expertise and on the specific places in which the work happens.</p></div></PageContainer></section>
-    <section className="about-materials page-container"><div className="about-materials-copy"><SectionLabel>MATERIAL / DESIGN</SectionLabel><h2>A material language built around coffee.</h2><p>Laterite, basalt, linen, paper, red clay, morning light, and shadow give Red Clay its visual vocabulary. They support the coffee; they do not explain how it tastes.</p></div><div className="about-materials-media"><MediaFrame asset={redClayAssets.materials.clay} className="about-materials-clay" sizes="(max-width: 767px) 100vw, 42vw" /><MediaFrame asset={redClayAssets.materials.linen} className="about-materials-linen" sizes="(max-width: 767px) 70vw, 24vw" /></div></section>
-    <section className="about-roasting"><PageContainer><SectionLabel>COFFEE PHILOSOPHY</SectionLabel><h2>Clarity before spectacle.</h2><p>A useful coffee description should help you choose: sweetness, acidity, body, finish, and the references that distinguish one profile from another.</p></PageContainer></section>
-    <section className="about-closing page-container"><SectionLabel>CONTINUE</SectionLabel><h2>Coffee for the stillness of early light.</h2><Link className="editorial-link" href="/shop">Shop the harvest <span aria-hidden="true">↗</span></Link></section>
-  </main>;
+  const bags = [redClayAssets.products.materialLaterite, redClayAssets.products.materialBasalt, redClayAssets.products.materialLinen];
+  return (
+    <main id="main-content" className="about">
+      <section className="wrap about-head">
+        <p className="mono muted">About Red Clay</p>
+        <h1 className="serif display-xl">A contemporary African coffee house, built around the material character of place.</h1>
+        <p className="about-head-copy">Red Clay is an independent roastery in Nairobi working with East African coffees, objects for daily use, and writing that takes place seriously. We roast in small batches and try to say only what we know.</p>
+      </section>
+      <figure className="wrap about-hero">
+        <div className="about-hero-media"><Image className="grade" src={redClayAssets.crops.redEarth.src} alt={redClayAssets.crops.redEarth.alt} fill priority sizes="100vw" style={{ objectPosition: "center 70%" }} /></div>
+        <figcaption className="mono muted">Red earth, Fairview Estate, Kiambu</figcaption>
+      </figure>
+      <nav className="wrap about-steps" aria-label="The continuum">
+        {steps.map((step) => <a key={step.id} href={`#${step.id}`}><span className="mono accent">{step.n}</span><span className="serif display-s">{step.name}</span></a>)}
+      </nav>
+
+      <section id="earth" className="wrap about-row">
+        <div className="ratio-3-4"><Image className="grade" src={redClayAssets.architecture.hero.src} alt={redClayAssets.architecture.hero.alt} fill sizes="(max-width: 820px) 100vw, 40vw" /></div>
+        <div className="about-row-copy">
+          <p className="mono muted">01 · Earth</p>
+          <h2 className="serif display-m">Laterite, basalt, linen.</h2>
+          <p>Our palette and our names come from materials of the region: iron-red earth, dark volcanic stone, raw linen. They describe a feeling, not a flavour. Laterite, Basalt and Linen are house coffees with steady profiles; the names are metaphors, not claims about soil or terroir.</p>
+          <div className="about-swatches">
+            <span className="ratio-1-1"><Image src={redClayAssets.materials.clay.src} alt={redClayAssets.materials.clay.alt} fill sizes="12vw" /></span>
+            <span className="ratio-1-1"><Image src={redClayAssets.materials.stone.src} alt={redClayAssets.materials.stone.alt} fill sizes="12vw" /></span>
+            <span className="ratio-1-1 about-linen" role="img" aria-label="Linen colour swatch" />
+          </div>
+        </div>
+      </section>
+
+      <section id="coffee" className="about-band">
+        <div className="wrap about-row about-row--flip">
+          <div className="about-row-copy">
+            <p className="mono muted">02 · Coffee</p>
+            <h2 className="serif display-m">Three highland regions. Three ways into the coffee.</h2>
+            <p>Central Kenya, Kayanza in Burundi and Southern Ethiopia. Six Current Harvest coffees, each named for its character and labelled with its place and process. We describe a region as context, never as a guarantee of taste.</p>
+            <Link className="text-link" href="/origins">Open The Earthen Folio</Link>
+          </div>
+          <div className="about-trio">
+            <span className="ratio-3-4"><Image className="grade" src={redClayAssets.documentary.kiambuLead.src} alt={redClayAssets.documentary.kiambuLead.alt} fill sizes="16vw" /></span>
+            <span className="ratio-3-5"><Image className="grade" src={redClayAssets.origins.burundiLead.src} alt={redClayAssets.origins.burundiLead.alt} fill sizes="16vw" /></span>
+            <span className="ratio-3-4"><Image className="grade" src={redClayAssets.origins.ethiopiaDetail.src} alt={redClayAssets.origins.ethiopiaDetail.alt} fill sizes="16vw" /></span>
+          </div>
+        </div>
+      </section>
+
+      <section id="vessel" className="wrap about-row">
+        <div className="ratio-4-5"><Image src={redClayAssets.objects.kilnPlinth.src} alt={redClayAssets.objects.kilnPlinth.alt} fill sizes="(max-width: 820px) 100vw, 45vw" /></div>
+        <div className="about-row-copy">
+          <p className="mono muted">03 · Vessel</p>
+          <h2 className="serif display-m">Clay outside. Glaze within.</h2>
+          <p>The Kiln Cup is our one companion object: high-fired, iron-rich stoneware with an exposed red exterior and a warm white interior. It is made for daily use, and it should never become more important than the coffee in it.</p>
+          <Link className="text-link" href="/shop/the-kiln-cup">The Kiln Cup · {formatKes(kilnCup.price)}</Link>
+        </div>
+      </section>
+
+      <section id="ritual" className="about-dark">
+        <div className="wrap about-row about-row--flip">
+          <div className="about-row-copy">
+            <p className="mono">04 · Ritual</p>
+            <h2 className="serif display-m">Coffee for the stillness of early light.</h2>
+            <p>The last step is yours: the grinder, the kettle, the first cup before the day starts. Everything before it should make that moment quieter, not louder.</p>
+          </div>
+          <div className="ratio-4-3"><Image className="grade" src={redClayAssets.ritual.hands.src} alt={redClayAssets.ritual.hands.alt} fill sizes="(max-width: 820px) 100vw, 50vw" /></div>
+        </div>
+      </section>
+
+      <section className="wrap about-principles">
+        <p className="mono muted">How we work</p>
+        <ol>{principles.map((item) => <li key={item.n}><span className="mono muted">{item.n}</span><span className="serif display-s">{item.t}</span><span>{item.d}</span></li>)}</ol>
+      </section>
+
+      <section className="wrap about-close">
+        <div className="about-close-bags">{bags.map((asset) => <Image key={asset.id} className="cut" src={asset.src} alt={asset.alt} width={444} height={680} sizes="14vw" />)}</div>
+        <div className="about-row-copy">
+          <p className="serif display-m">Roasted in Nairobi.</p>
+          <p>Small batches. Orders leave the roastery within 1–2 business days. Free delivery anywhere in Kenya from KES 5,000.</p>
+          <Link className="button" href="/shop">Shop coffee</Link>
+        </div>
+      </section>
+    </main>
+  );
 }
