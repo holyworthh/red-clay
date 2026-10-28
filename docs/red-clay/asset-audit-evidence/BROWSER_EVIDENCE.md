@@ -1,5 +1,20 @@
 # Red Clay asset audit browser evidence
 
+> **Catalogue note (2026-10-28):** The Current Harvest coffees have since been renamed in code (`src/content/coffees.ts`). The product names and slugs below are **historical** and record the state at the time this document was written; they are not current. Current mapping:
+>
+> | Former name (former slug) | Earlier working name | Current name | Current slug | Lot code in code |
+> |---|---|---|---|---|
+> | KIAMBU / WASHED 01 (`kiambu-washed-01`) | Kenya Lot 01 (`kenya-lot-01`) | Plum Season | `/shop/plum-season` | RC / CH / 01 |
+> | KIRINYAGA / WASHED 02 (`kirinyaga-washed-02`) | — | Cane Light | `/shop/cane-light` | RC / CH / 02 |
+> | KAYANZA / WASHED 01 (`kayanza-washed-01`) | Burundi Lot 01 (`burundi-lot-01`) | Honey Bloom | `/shop/honey-bloom` | RC / CH / 03 |
+> | KAYANZA / NATURAL 02 (`kayanza-natural-02`) | — | Red Orchard | `/shop/red-orchard` | RC / CH / 04 |
+> | SIDAMA / WASHED 01 (`sidama-washed-01`) | Ethiopia Lot 01 (`ethiopia-lot-01`) | Jasmine Air | `/shop/jasmine-air` | RC / CH / 05 |
+> | GUJI / NATURAL 02 (`guji-natural-02`) | Ethiopia Lot 02 (`ethiopia-lot-02`) | Blue Hour | `/shop/blue-hour` | RC / CH / 06 |
+>
+> All former slugs permanently redirect to the current slugs (`next.config.ts`). Laterite, Basalt, Linen (The Material Series), Afterlight, Red Clay Instant — Ethiopia, Three Regions, and The Kiln Cup (handleless) are unchanged.
+
+> The placeholder panels described below have since been replaced by the drawn packaging system; this evidence is a dated record.
+
 Date: 2026-08-29  
 Target: local Next.js app at `http://localhost:3001` (fresh dev server; port 3000 served a stale unstyled process)  
 Viewports exercised: 390×844, 768×1024, 1366×768, and 1440×900.

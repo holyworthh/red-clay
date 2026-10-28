@@ -119,6 +119,28 @@ export const redClayAssets = {
       alt: "Coffee beans being sifted during quality sorting in Ethiopia.",
       role: "Ethiopia process detail",
     },
+    kirinyagaLand: {
+      id: "KEN-LAND-003",
+      src: "/media/red-clay/KENYA/KEN-LAND-003.jpg",
+      status: "APPROVED_CURRENT",
+      alt: "Aerial view of a river through farmland and red-earth tracks near Kutus, Kirinyaga County, Kenya.",
+      role: "Kirinyaga place plate (landscape, not a coffee scene)",
+      location: "Near Kutus, Kirinyaga County, Kenya",
+      creator: "DavyKirii",
+      license: "CC BY-SA 4.0",
+      sourcePage: "https://commons.wikimedia.org/wiki/File:Rukenya_Confluence.jpg",
+    },
+    sidamaLand: {
+      id: "ETH-LAND-001",
+      src: "/media/red-clay/ETHIOPIA/ETH-LAND-001.jpg",
+      status: "APPROVED_CURRENT",
+      alt: "A forested mountain seen from Wondo Genet, Sidama, Ethiopia.",
+      role: "Sidama place plate (landscape, not a coffee scene)",
+      location: "Wondo Genet, Sidama, Ethiopia",
+      creator: "Gyrofrog",
+      license: "CC BY-SA 3.0",
+      sourcePage: "https://commons.wikimedia.org/wiki/File:WondoGenetMountainView.jpg",
+    },
   },
   documentary: {
     homePlace: {

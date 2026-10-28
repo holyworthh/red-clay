@@ -3,8 +3,7 @@ import Link from "next/link";
 import { BuyBox } from "@/components/commerce/BuyBox";
 import { ProductGallery, type GalleryView } from "@/components/commerce/ProductGallery";
 import { ProductCard } from "@/components/product/ProductCard";
-import { ProductVisual } from "@/components/product/ProductVisual";
-import { PackageArt } from "@/components/product/PackageArt";
+import { BagPhoto, ProductVisual } from "@/components/product/ProductVisual";
 import { ObjectArt } from "@/components/product/ObjectArt";
 import { formatKes, getProductById, kilnCup, type Product } from "@/content/coffees";
 import { editions } from "@/content/editions";
@@ -37,17 +36,17 @@ function galleryFor(product: Product): GalleryView[] {
       { label: art.key === "instant" ? "Carton" : "Open", main: main(<ProductVisual product={product} scale="stage" priority />), thumb: <ProductVisual product={product} scale="thumb" /> },
       { label: art.key === "instant" ? "Sachet" : "Closed", main: main(<ProductVisual product={product} view="alternate" scale="stage" />), thumb: <ProductVisual product={product} view="alternate" scale="thumb" /> },
     ];
-    if (art.key === "regions") views.push({ label: "100 g pack", main: main(<div className="pv pv--studio"><div className="pv-bag pv-bag--small"><PackageArt sku="honey-bloom" weight="100 g" /></div></div>), thumb: <div className="pv pv--studio"><div className="pv-bag pv-bag--small"><PackageArt sku="honey-bloom" weight="100 g" /></div></div> });
+    if (art.key === "regions") views.push({ label: "100 g pack", main: main(<BagPhoto sku="honey-bloom" small scale="stage" sizes="(max-width: 1180px) 60vw, 26vw" />), thumb: <BagPhoto sku="honey-bloom" small scale="thumb" sizes="8vw" /> });
     return views;
   }
   const views: GalleryView[] = [
     { label: "Front", main: main(<ProductVisual product={product} scale="stage" priority sizes="(max-width: 1180px) 60vw, 26vw" />), thumb: <ProductVisual product={product} scale="thumb" sizes="8vw" /> },
-    { label: "Back", main: main(<div className="pv pv--studio pv--stage"><div className="pv-bag"><PackageArt sku={art.key} side="back" /></div></div>), thumb: <div className="pv pv--studio pv--thumb"><div className="pv-bag"><PackageArt sku={art.key} side="back" /></div></div> },
+    { label: "Back", main: main(<BagPhoto sku={art.key} side="back" scale="stage" sizes="(max-width: 1180px) 60vw, 26vw" />), thumb: <BagPhoto sku={art.key} side="back" scale="thumb" sizes="8vw" /> },
   ];
   if (product.family === "current-harvest") {
     views.push(
-      { label: "With The Kiln Cup", main: main(<div className="pv-pair"><div className="pv pv--studio"><div className="pv-bag"><PackageArt sku={art.key} /></div></div><div className="pv-pair-photo"><Photo asset={redClayAssets.objects.kilnRakingLight} grade={false} sizes="(max-width: 1180px) 50vw, 23vw" /></div></div>), thumb: <div className="pv pv--bleed"><Photo asset={redClayAssets.objects.kilnRakingLight} grade={false} sizes="8vw" /></div> },
-      { label: "Detail", main: main(<div className="pv pv--studio pv--detail"><div className="pv-bag"><PackageArt sku={art.key} /></div></div>), thumb: <div className="pv pv--studio pv--detail"><div className="pv-bag"><PackageArt sku={art.key} /></div></div> },
+      { label: "With The Kiln Cup", main: main(<div className="pv-pair"><BagPhoto sku={art.key} sizes="(max-width: 1180px) 50vw, 23vw" /><div className="pv-pair-photo"><Photo asset={redClayAssets.objects.kilnRakingLight} grade={false} sizes="(max-width: 1180px) 50vw, 23vw" /></div></div>), thumb: <div className="pv pv--bleed"><Photo asset={redClayAssets.objects.kilnRakingLight} grade={false} sizes="8vw" /></div> },
+      { label: "Detail", main: main(<BagPhoto sku={art.key} className="pv--detail" sizes="(max-width: 1180px) 100vw, 60vw" />), thumb: <BagPhoto sku={art.key} className="pv--detail" sizes="12vw" /> },
     );
   } else if (media.alternatePhoto?.src && product.family === "material-series") {
     views.push({ label: "Material", main: main(<div className="pv pv--bleed"><Photo asset={media.alternatePhoto} grade={false} sizes="(max-width: 1180px) 100vw, 46vw" /></div>), thumb: <div className="pv pv--bleed"><Photo asset={media.alternatePhoto} grade={false} sizes="8vw" /></div> });
@@ -159,7 +158,7 @@ function HarvestStory({ product }: Readonly<{ product: Product }>) {
       {origin?.src && (
         <figure className="wrap pdp-place">
           <div className="pdp-place-media"><Photo asset={origin} sizes="100vw" /></div>
-          <figcaption className="mono muted">{placeLabel} — {origin.location ?? origin.alt.replace(/\.$/, "")}</figcaption>
+          <figcaption className="mono muted">{placeLabel} — {origin.location ?? origin.alt.replace(/\.$/, "")}{origin.creator && <> · Photo: <a href={origin.sourcePage} rel="noopener noreferrer" target="_blank">{origin.creator}, {origin.license}</a></>}</figcaption>
         </figure>
       )}
       <section className="wrap pdp-process">
@@ -245,7 +244,7 @@ function RegionsStory() {
             const coffee = getProductById(id);
             if (!coffee || coffee.art.type !== "bag") return null;
             return <Link key={id} href={`/shop/${coffee.slug}`} className="regions-item">
-              <span className="pv pv--studio ratio-1-1"><span className="pv-bag pv-bag--small"><PackageArt sku={coffee.art.key} weight="100 g" /></span></span>
+              <span className="ratio-1-1"><BagPhoto sku={coffee.art.key} small sizes="(max-width: 820px) 100vw, 30vw" /></span>
               <span className="mono accent">0{index + 1} · {regions[index]}</span>
               <span className="serif display-s">{coffee.name}</span>
               <span className="small">{coffee.region} · {coffee.process} · {coffee.notes.join(" / ")}</span>

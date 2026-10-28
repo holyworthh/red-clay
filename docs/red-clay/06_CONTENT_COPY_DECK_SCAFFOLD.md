@@ -2,6 +2,19 @@
 
 **Status:** Structure for final content pass. Provisional copy is preserved only where canonical sources support it. Placeholders must remain visibly unresolved in authoring data; production UI should not expose raw tags.
 
+**Catalogue change note (2026-10-28):** The Current Harvest coffees were renamed in code (`src/content/coffees.ts`). The product constants and CTAs below now use the current names, slugs, and values from code; the earlier `KENYA LOT 01` / `BURUNDI LOT 01` / `ETHIOPIA LOT 01–02` working IDs are superseded.
+
+| Former name (former slug) | Earlier working name | Current name | Current slug | Lot code in code |
+|---|---|---|---|---|
+| KIAMBU / WASHED 01 (`kiambu-washed-01`) | Kenya Lot 01 (`kenya-lot-01`) | Plum Season | `/shop/plum-season` | RC / CH / 01 |
+| KIRINYAGA / WASHED 02 (`kirinyaga-washed-02`) | — | Cane Light | `/shop/cane-light` | RC / CH / 02 |
+| KAYANZA / WASHED 01 (`kayanza-washed-01`) | Burundi Lot 01 (`burundi-lot-01`) | Honey Bloom | `/shop/honey-bloom` | RC / CH / 03 |
+| KAYANZA / NATURAL 02 (`kayanza-natural-02`) | — | Red Orchard | `/shop/red-orchard` | RC / CH / 04 |
+| SIDAMA / WASHED 01 (`sidama-washed-01`) | Ethiopia Lot 01 (`ethiopia-lot-01`) | Jasmine Air | `/shop/jasmine-air` | RC / CH / 05 |
+| GUJI / NATURAL 02 (`guji-natural-02`) | Ethiopia Lot 02 (`ethiopia-lot-02`) | Blue Hour | `/shop/blue-hour` | RC / CH / 06 |
+
+All former slugs permanently redirect to the current slugs (`next.config.ts`). Laterite, Basalt, Linen (The Material Series), Afterlight, Red Clay Instant — Ethiopia, Three Regions, and The Kiln Cup (handleless) are unchanged.
+
 ## Placeholder legend
 
 - `[TBD]` — editorial decision not yet made.
@@ -35,10 +48,12 @@
 
 | Working ID | Final name | Region | Notes | Process | Elevation | Variety | Size | Price | Status |
 |---|---|---|---|---|---|---|---|---|---|
-| `KENYA LOT 01` | `[FICTIONAL PRODUCT DECISION]` | Central Kenya `[VERIFY]` | blackcurrant / plum / cane sugar `[TBD]` | washed `[VERIFY]` | `[VERIFY]` | `[VERIFY]` | `[BUSINESS MODEL DECISION]` | `[BUSINESS MODEL DECISION]` | `[BUSINESS MODEL DECISION]` |
-| `BURUNDI LOT 01` | `[FICTIONAL PRODUCT DECISION]` | Kayanza, Burundi `[VERIFY]` | red apple / honey / orange blossom `[TBD]` | `[VERIFY]` | `[VERIFY]` | `[VERIFY]` | `[BUSINESS MODEL DECISION]` | `[BUSINESS MODEL DECISION]` | `[BUSINESS MODEL DECISION]` |
-| `ETHIOPIA LOT 01` | `[FICTIONAL PRODUCT DECISION]` | Southern Ethiopia `[VERIFY]` | `[TBD]` | washed/natural `[VERIFY]` | `[VERIFY]` | `[VERIFY]` | `[BUSINESS MODEL DECISION]` | `[BUSINESS MODEL DECISION]` | `[BUSINESS MODEL DECISION]` |
-| `ETHIOPIA LOT 02` | `[FICTIONAL PRODUCT DECISION]` | Southern Ethiopia `[VERIFY]` | `[TBD]` | washed/natural `[VERIFY]` | `[VERIFY]` | `[VERIFY]` | `[BUSINESS MODEL DECISION]` | `[BUSINESS MODEL DECISION]` | `[BUSINESS MODEL DECISION]` |
+| `PLUM SEASON` | `Plum Season` | Kiambu, Kenya | blackcurrant / plum / cane sugar | washed | `[VERIFY]` | SL28 / SL34 / Ruiru 11 | 250g | KES 1,950 | In code (`src/content/coffees.ts`) |
+| `CANE LIGHT` | `Cane Light` | Kirinyaga, Kenya | red currant / hibiscus / pomelo | washed | `[VERIFY]` | SL28 / SL34 / Batian | 250g | KES 2,100 | In code (`src/content/coffees.ts`) |
+| `HONEY BLOOM` | `Honey Bloom` | Kayanza, Burundi | red apple / honey / orange blossom | washed | `[VERIFY]` | Red Bourbon | 250g | KES 1,900 | In code (`src/content/coffees.ts`) |
+| `RED ORCHARD` | `Red Orchard` | Kayanza, Burundi | raspberry / black tea / brown sugar | natural | `[VERIFY]` | Red Bourbon | 250g | KES 2,050 | In code (`src/content/coffees.ts`) |
+| `JASMINE AIR` | `Jasmine Air` | Sidama, Ethiopia | jasmine / yellow peach / lemon tea | washed | `[VERIFY]` | Ethiopian landrace selections | 250g | KES 2,100 | In code (`src/content/coffees.ts`) |
+| `BLUE HOUR` | `Blue Hour` | Guji, Ethiopia | strawberry / apricot / cacao nib | natural | `[VERIFY]` | Ethiopian landrace selections | 250g | KES 2,200 | In code (`src/content/coffees.ts`) |
 | `THE KILN CUP` | `The Kiln Cup` | Companion object | raw terracotta / light glazed interior `[FICTIONAL PRODUCT DECISION]` | n/a | n/a | n/a | capacity `[FICTIONAL PRODUCT DECISION]` | `[BUSINESS MODEL DECISION]` | `[BUSINESS MODEL DECISION]` |
 
 ## `/` — Homepage
@@ -89,7 +104,7 @@
 - Working subtitle: `Washed coffee in the Central Kenya highlands.` `[VERIFY]`
 - Excerpt: `[TBD — regional processing context; no invented visit/interview or fixed duration]`
 - CTA: `Read the Edition` → `[chapter slug TBD]`
-- Product CTA: `View Kenya Lot 01` → `[final slug TBD]`
+- Product CTA: `View Plum Season` → `/shop/plum-season`
 
 ### Kiln Cup / Ritual
 
@@ -336,6 +351,8 @@ CTAs: `Explore Central Kenya`, `Explore Kayanza`, `Explore Southern Ethiopia`.
 - Offline/connection: `[TBD if app implements offline messaging]`.
 
 ## Footer / legal / disclosure placeholders
+
+*(Implementation state, 2026-10-28: a site footer now ships in `src/components/layout/Footer.tsx` with a dispatch/delivery strip, a "Letters from the roastery" email sign-up (client-side validation only), Shop links, Read links (Origins, The Earthen Folio → `/origins#folio`, Editions → `/journal`, About), and a fictional-brand disclosure with `© 2026`. Privacy/terms/cookies, returns, social links, and newsletter consent below remain open.)*
 
 - Brand descriptor and copyright year.
 - Shop, Origins, The Editions, About.

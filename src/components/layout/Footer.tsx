@@ -16,6 +16,7 @@ const readLinks = [
   { label: "The Earthen Folio", href: "/origins#folio" },
   { label: "Editions", href: "/journal" },
   { label: "About", href: "/about" },
+  { label: "Photo credits", href: "/credits" },
 ];
 
 export function Footer() {

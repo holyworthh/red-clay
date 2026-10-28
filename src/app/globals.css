@@ -266,13 +266,14 @@ img.grade { filter: saturate(0.74) sepia(0.12) contrast(0.95) brightness(1.02); 
 .pv--thumb .pv-bag { width: 50%; }
 .pv--thumb .pv-cut { width: 62%; }
 .pv--detail { align-items: flex-start; }
-.pv--detail .pv-bag { width: 140%; margin-top: -32%; flex: none; }
+.pv--detail .pv-cut { width: 150%; margin-top: -30%; flex: none; }
+.pv-cut--small { width: 44%; }
 .pv-object { width: 92%; }
 .pv-object--sachet { width: 64%; }
 .pv-object--dims { width: 100%; }
 .pv-pair { position: absolute; inset: 0; display: grid; grid-template-columns: 1fr 1fr; }
 .pv-pair .pv { position: relative; }
-.pv-pair .pv-bag { width: 74%; }
+.pv-pair .pv-cut { width: 74%; }
 .pv-pair-photo { position: relative; }
 .pv-pair-photo img { object-fit: cover; }
 
@@ -452,7 +453,6 @@ img.grade { filter: saturate(0.74) sepia(0.12) contrast(0.95) brightness(1.02); 
 .pdp-care > div:last-child { grid-column: 8 / span 5; display: flex; flex-direction: column; gap: 16px; }
 .pdp-care .record dd { font-size: 11px; }
 .regions-item { display: flex; flex-direction: column; gap: 12px; text-decoration: none; }
-.regions-item .pv { position: relative; }
 .pdp-edition { padding-top: 120px; }
 .pdp-edition-link { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; align-items: center; text-decoration: none; border-top: 1px solid var(--line); padding-top: 24px; }
 .pdp-edition-link:hover { color: inherit; }
@@ -924,3 +924,12 @@ img.grade { filter: saturate(0.74) sepia(0.12) contrast(0.95) brightness(1.02); 
   .bag-line-price { grid-column: 2; }
   .tag { grid-template-columns: 1fr; }
 }
+
+/* ---------- Credits ---------- */
+.credits { padding-top: 64px; padding-bottom: 120px; max-width: 900px; }
+.credits h1 { margin: 12px 0 20px; }
+.credits-intro { max-width: 60ch; margin-bottom: 48px; }
+.credits-list { list-style: none; margin: 0 0 32px; padding: 0; border-top: 1px solid var(--line); }
+.credits-list li { display: flex; justify-content: space-between; gap: 24px; padding: 16px 0; border-bottom: 1px solid var(--line); font-size: 14px; }
+.credits-list li .serif { font-size: 18px; }
+@media (max-width: 820px) { .credits-list li { flex-direction: column; gap: 4px; } }

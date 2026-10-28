@@ -1,5 +1,20 @@
 # Red Clay Coffee — Full Asset Audit & Production Plan
 
+> **Catalogue note (2026-10-28):** The Current Harvest coffees have since been renamed in code (`src/content/coffees.ts`). The product names and slugs below are **historical** and record the state at the time this document was written; they are not current. Current mapping:
+>
+> | Former name (former slug) | Earlier working name | Current name | Current slug | Lot code in code |
+> |---|---|---|---|---|
+> | KIAMBU / WASHED 01 (`kiambu-washed-01`) | Kenya Lot 01 (`kenya-lot-01`) | Plum Season | `/shop/plum-season` | RC / CH / 01 |
+> | KIRINYAGA / WASHED 02 (`kirinyaga-washed-02`) | — | Cane Light | `/shop/cane-light` | RC / CH / 02 |
+> | KAYANZA / WASHED 01 (`kayanza-washed-01`) | Burundi Lot 01 (`burundi-lot-01`) | Honey Bloom | `/shop/honey-bloom` | RC / CH / 03 |
+> | KAYANZA / NATURAL 02 (`kayanza-natural-02`) | — | Red Orchard | `/shop/red-orchard` | RC / CH / 04 |
+> | SIDAMA / WASHED 01 (`sidama-washed-01`) | Ethiopia Lot 01 (`ethiopia-lot-01`) | Jasmine Air | `/shop/jasmine-air` | RC / CH / 05 |
+> | GUJI / NATURAL 02 (`guji-natural-02`) | Ethiopia Lot 02 (`ethiopia-lot-02`) | Blue Hour | `/shop/blue-hour` | RC / CH / 06 |
+>
+> All former slugs permanently redirect to the current slugs (`next.config.ts`). Laterite, Basalt, Linen (The Material Series), Afterlight, Red Clay Instant — Ethiopia, Three Regions, and The Kiln Cup (handleless) are unchanged.
+
+> Implementation has also moved on since this audit: a drawn packaging system (`PackageArt` / `ObjectArt`) replaced the CSS-geometry placeholders, real Material Series packshots ship in `public/media/red-clay/products/`, and two Kiln Cup photographs ship in `public/media/red-clay/objects/`. The gap analysis below is a dated record, not the current asset state.
+
 **Status:** `FULL ASSET AUDIT — PRODUCTION PLAN READY FOR CREATIVE REVIEW`  
 **Audit date:** 2026-08-29  
 **Scope:** Current implementation, selected production media, provenance, route usage, responsive slots, and the smallest coherent future production set.  

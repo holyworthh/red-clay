@@ -5,6 +5,19 @@
 **Status:** Operational Section-6 asset manifest. Initial implementation sources are locked; custom product media remains pending but does not block implementation.  
 **Evidence note:** The original supplied visual files remain 10 Canyon screenshots and 2 Onyx screenshots used by the reference atlas. Section 6A additionally archived external source candidates in Google Drive. Those files are candidates—not supplied Red Clay validation imagery and not approved production assets. The Validation Pack defines target asset concepts (Assets 01–13), so `Spec` below means a written validation specification exists.
 
+**Catalogue change note (2026-10-28):** The Current Harvest coffees were renamed in code (`src/content/coffees.ts`). Slot IDs (`KENYA`, `BURUNDI`, `ETH01`, `ETH02`) are unchanged as identifiers; descriptive labels now use current product names. With six Current Harvest coffees, the four-slot product rows below remain a scaffold.
+
+| Former name (former slug) | Earlier working name | Current name | Current slug | Lot code in code |
+|---|---|---|---|---|
+| KIAMBU / WASHED 01 (`kiambu-washed-01`) | Kenya Lot 01 (`kenya-lot-01`) | Plum Season | `/shop/plum-season` | RC / CH / 01 |
+| KIRINYAGA / WASHED 02 (`kirinyaga-washed-02`) | — | Cane Light | `/shop/cane-light` | RC / CH / 02 |
+| KAYANZA / WASHED 01 (`kayanza-washed-01`) | Burundi Lot 01 (`burundi-lot-01`) | Honey Bloom | `/shop/honey-bloom` | RC / CH / 03 |
+| KAYANZA / NATURAL 02 (`kayanza-natural-02`) | — | Red Orchard | `/shop/red-orchard` | RC / CH / 04 |
+| SIDAMA / WASHED 01 (`sidama-washed-01`) | Ethiopia Lot 01 (`ethiopia-lot-01`) | Jasmine Air | `/shop/jasmine-air` | RC / CH / 05 |
+| GUJI / NATURAL 02 (`guji-natural-02`) | Ethiopia Lot 02 (`ethiopia-lot-02`) | Blue Hour | `/shop/blue-hour` | RC / CH / 06 |
+
+All former slugs permanently redirect to the current slugs (`next.config.ts`). Laterite, Basalt, Linen (The Material Series), Afterlight, Red Clay Instant — Ethiopia, Three Regions, and The Kiln Cup (handleless) are unchanged.
+
 ## Status vocabulary
 
 - `OPEN` — slot required or optional; no final file selected.
@@ -54,8 +67,8 @@ This overlay supersedes earlier “no approvals” statements for implementation
 | `ARCH-201` | YES | `PROVISIONAL_REPLACEABLE` | Home/About architecture prototype; not a Red Clay location. |
 | `PACK-201`–`PACK-205` | NO for production | `REFERENCE_ONLY` | Never use third-party packaging in the Red Clay product experience. |
 | `CUP-201`–`CUP-205` | NO for production | `REFERENCE_ONLY` | Form/material reference only; not The Kiln Cup. |
-| Fictional coffee packaging, packshots and alternates | NO | `CUSTOM_ASSET_PENDING` | Use temporary product-media component. |
-| Kiln Cup imagery and `CUP-DIMENSION-GRAPHIC` | NO | `CUSTOM_ASSET_PENDING` | Use temporary media; never invent dimensions. |
+| Fictional coffee packaging, packshots and alternates | NO | `CUSTOM_ASSET_PENDING` | Use temporary product-media component. *2026-10-28: the drawn packaging system (`PackageArt` / `ObjectArt`) replaced the temporary component; real Material Series packshots (`material-laterite.jpg`, `material-basalt.jpg`, `material-linen.jpg`, `material-series-trio.jpg`) ship in `public/media/red-clay/products/`. Every other bag front and back now uses photographic bag renders (`bag-<sku>-front.jpg` / `bag-<sku>-back.jpg`, plus 100 g fronts for the Three Regions packs) in `public/media/red-clay/products/`, built from the real Linen packshot: its print is removed, the paper's own grain and lighting are kept, and each SKU's colours, motif and label are reprinted through that shading. Instant and the Three Regions box remain drawn (`ObjectArt`); true photographed packshots of the printed bags remain pending.* |
+| Kiln Cup imagery and `CUP-DIMENSION-GRAPHIC` | NO | `CUSTOM_ASSET_PENDING` | Use temporary media; never invent dimensions. *2026-10-28: two Kiln Cup photographs (`kiln-cup-plinth.jpg`, `kiln-cup-raking-light.jpg`) ship in `public/media/red-clay/objects/`; `CUP-DIMENSION-GRAPHIC` remains pending.* |
 | Product + Cup pairing imagery, including `CUP-BUNDLE` | NO | `CUSTOM_ASSET_PENDING` | Use temporary media; do not imply a discount. |
 
 `ASSET DISCOVERY NO LONGER BLOCKS IMPLEMENTATION.`
@@ -135,8 +148,8 @@ Exact URLs, attribution text, modification rights, access dates, and original fi
 | `HOME-CONTINUUM-MAT` | Home / Continuum | Earth/clay/basalt/linen/coffee material bridge | Still/texture | 16:9 | 4:5 | Optional crop | Spec: Asset 09 | Test | No | Low | No | `[TBD]` | REUSE TEST with About/Folio plane |
 | `HOME-PROD-01` | Home / Harvest | Kenya coffee master card | Product still | 3:4 | 3:4/compact | No | Spec: Asset 06 geometry | Yes | No | Low | No | `[TBD]` | FINAL REQUIRED; reuse Kenya pack master |
 | `HOME-PROD-02` | Home / Harvest | Burundi coffee master card | Product still | 3:4 | compact | No | Spec: Asset 06 geometry | Yes | No | Low | No | `[TBD]` | FINAL REQUIRED; reuse Burundi pack master |
-| `HOME-PROD-03` | Home / Harvest | Ethiopia Lot 01 card | Product still | 3:4 | compact | No | Spec: Asset 06 geometry | Yes | No | Low | No | `[TBD]` | FINAL REQUIRED; reuse ETH01 pack master |
-| `HOME-PROD-04` | Home / Harvest | Ethiopia Lot 02 card | Product still | 3:4 | compact | No | Spec: Asset 06 geometry | Yes | No | Low | No | `[TBD]` | FINAL REQUIRED; reuse ETH02 pack master |
+| `HOME-PROD-03` | Home / Harvest | Jasmine Air card (slot ETH01) | Product still | 3:4 | compact | No | Spec: Asset 06 geometry | Yes | No | Low | No | `[TBD]` | FINAL REQUIRED; reuse ETH01 pack master |
+| `HOME-PROD-04` | Home / Harvest | Blue Hour card (slot ETH02) | Product still | 3:4 | compact | No | Spec: Asset 06 geometry | Yes | No | Low | No | `[TBD]` | FINAL REQUIRED; reuse ETH02 pack master |
 | `HOME-PROD-05` | Home / Harvest | Kiln Cup product card | Product still | 3:4 | compact/1:1 | No | Spec: Asset 08 | Yes | No | No | No | `[TBD]` | FINAL REQUIRED; Cup master family |
 | `HOME-ORIGIN-KENYA` | Home / Origins | Central Kenya preview | Landscape/editorial | 16:9 | 4:5 | Preferred | No file; regional spec only | Test | Related | High | Possible | `[TBD]` | REUSE TEST from Folio/Dossier lead |
 | `HOME-ORIGIN-BURUNDI` | Home / Origins | Kayanza preview | Landscape/editorial | 16:9 | 4:5 | Preferred | Spec: Asset 01 concept | Test | Related | High | Possible | `[TBD]` | REUSE TEST from Folio/Dossier lead |
@@ -180,7 +193,7 @@ Exact URLs, attribution text, modification rights, access dates, and original fi
 | `PDP-BURUNDI-BOTANICAL` | Burundi PDP / Optional | Cherry/canopy detail | Macro | 1:1/4:5 | 1:1 | No | Asset 10 generic concept | Optional | No | High | No | `[TBD]` | OPTIONAL |
 | `PDP-BURUNDI-RITUAL` | Burundi PDP / Optional | Brew scene | Editorial still | 4:5/16:9 | 4:5 | Maybe | Asset 05 concept | Optional | No | Low | Hands possible | `[TBD]` | OPTIONAL |
 
-### Coffee PDP — Ethiopia Lot 01
+### Coffee PDP — Jasmine Air (Sidama; slot ETH01, formerly Ethiopia Lot 01)
 
 | Asset ID | Page / section | Role / subject | Media | D ratio | M ratio | Dedicated M? | Validation spec? | New required? | Folio dep. | Geo | People | Final file | Status / notes |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
@@ -191,7 +204,7 @@ Exact URLs, attribution text, modification rights, access dates, and original fi
 | `PDP-ETH01-BOTANICAL` | ETH01 PDP / Optional | Canopy/coffee plant | Macro/editorial | 1:1/4:5 | 1:1/4:5 | Maybe | Regional spec | Optional | No | High | No | `[TBD]` | OPTIONAL |
 | `PDP-ETH01-RITUAL` | ETH01 PDP / Optional | Brew scene | Editorial still | 4:5/16:9 | 4:5 | Maybe | Asset 05 concept | Optional | No | Low | Hands possible | `[TBD]` | OPTIONAL |
 
-### Coffee PDP — Ethiopia Lot 02
+### Coffee PDP — Blue Hour (Guji; slot ETH02, formerly Ethiopia Lot 02)
 
 | Asset ID | Page / section | Role / subject | Media | D ratio | M ratio | Dedicated M? | Validation spec? | New required? | Folio dep. | Geo | People | Final file | Status / notes |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|

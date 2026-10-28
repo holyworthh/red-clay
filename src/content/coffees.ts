@@ -271,7 +271,7 @@ export const currentHarvest: Coffee[] = [
     art: bag("cane-light"),
     media: {
       alternatePhoto: redClayAssets.origins.kenyaDetail,
-      origin: redClayAssets.documentary.kiambuSupport,
+      origin: redClayAssets.origins.kirinyagaLand,
       process: redClayAssets.origins.kenyaProcess,
       botanical: redClayAssets.documentary.kiambuCultivation,
     },
@@ -385,7 +385,7 @@ export const currentHarvest: Coffee[] = [
     art: bag("jasmine-air"),
     media: {
       alternatePhoto: redClayAssets.origins.ethiopiaLead,
-      origin: redClayAssets.origins.ethiopiaLead,
+      origin: redClayAssets.origins.sidamaLand,
       process: redClayAssets.origins.ethiopiaDetail,
       secondaryProcess: redClayAssets.origins.ethiopiaSupport,
     },

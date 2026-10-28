@@ -11,6 +11,7 @@
 - `SOURCE_IDENTIFIED_MANUAL_DOWNLOAD` confirms the original source page and an acceptable free-use license, but not archival.
 - CC BY and CC BY-SA assets require attribution. Adaptations of CC BY-SA assets must remain under the applicable share-alike license.
 - `Modification allowed` below refers to the stated source license; crop, retouching and contextual use must still preserve factual and cultural integrity.
+- `IN_REPOSITORY` (added 2026-10-28): downloaded from the original source, metadata stripped, resized to 2400 px on the long edge and committed under `public/media/red-clay/`. `KEN-LAND-003` original SHA-256 `914d52d253b37d7ea2669f9237c94a622c66780922e1c933256c91fc2a247d6f` (5095×3397; EXIF GPS 0°33′54.95″S 37°19′21.17″E, near Kutus, Kirinyaga County). `ETH-LAND-001` original SHA-256 `2fe17911a61b272e1b2d4876869cce1a547458414fbffc9190cb064b84f28565` (2816×1872; Commons files it under Wondo Genet, Sidama Region). Both are landscapes, not coffee scenes, and are captioned only with those places. Credits render in the product-page caption and on `/credits`.
 - Real people remain `CONTEXTUAL_EDITORIAL_ONLY` and may not be presented as Red Clay staff, suppliers, producers or partners.
 
 ## Full candidate provenance
@@ -299,6 +300,8 @@
 | `VIDEO-WINDOW-001` | manual download | [Pexels](https://www.pexels.com/video/rainy-window-coffee-35170762/) | Pexels contributor | Pexels License | NO | Optional credit: Pexels contributor via Pexels. | YES | YES | 2026-08-22 | `SOURCE_IDENTIFIED_MANUAL_DOWNLOAD` |
 | `VIDEO-POUR-002` | manual download | [Pexels](https://www.pexels.com/video/slow-motion-coffee-pour-outdoors-34768280/) | Pexels contributor | Pexels License | NO | Optional credit: Pexels contributor via Pexels. | YES | YES | 2026-08-22 | `SOURCE_IDENTIFIED_MANUAL_DOWNLOAD` |
 | `VIDEO-RITUAL-002` | manual download | [Pexels](https://www.pexels.com/video/coffee-time-1216594/) | Pexels contributor | Pexels License | NO | Optional credit: Pexels contributor via Pexels. | YES | YES | 2026-08-22 | `SOURCE_IDENTIFIED_MANUAL_DOWNLOAD` |
+| `KEN-LAND-003` | Rukenya Confluence.jpg | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:Rukenya_Confluence.jpg) | DavyKirii | CC BY-SA 4.0 | YES | “Rukenya Confluence.jpg” by DavyKirii, CC BY-SA 4.0, via Wikimedia Commons. | YES | YES | 2026-10-28 | `IN_REPOSITORY` |
+| `ETH-LAND-001` | WondoGenetMountainView.jpg | [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:WondoGenetMountainView.jpg) | Gyrofrog | CC BY-SA 3.0 | YES | “WondoGenetMountainView.jpg” by Gyrofrog, CC BY-SA 3.0, via Wikimedia Commons. | YES | YES | 2026-10-28 | `IN_REPOSITORY` |
 
 ## Provider terms
 

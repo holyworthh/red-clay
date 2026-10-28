@@ -4,6 +4,7 @@
 **Round:** Section 6A.3 — implementation asset lock  
 **Status:** Implementation orientation; not a final execution plan  
 **Change note:** Adds the approved initial asset lock, Codex asset-map authority, and non-blocking custom-media boundary while preserving Round 1.1 architecture decisions.  
+**Catalogue change note (2026-10-28):** The Current Harvest catalogue was renamed in code (`src/content/coffees.ts`, with permanent `/shop/` redirects in `next.config.ts`). Mapping: KIAMBU / WASHED 01 (`kiambu-washed-01`, earlier Kenya Lot 01) → **Plum Season** (`plum-season`); KIRINYAGA / WASHED 02 → **Cane Light** (`cane-light`); KAYANZA / WASHED 01 (earlier Burundi Lot 01) → **Honey Bloom** (`honey-bloom`); KAYANZA / NATURAL 02 → **Red Orchard** (`red-orchard`); SIDAMA / WASHED 01 (earlier Ethiopia Lot 01) → **Jasmine Air** (`jasmine-air`); GUJI / NATURAL 02 (earlier Ethiopia Lot 02) → **Blue Hour** (`blue-hour`). Laterite, Basalt, Linen, Afterlight, Red Clay Instant — Ethiopia, Three Regions, and The Kiln Cup are unchanged.  
 **Read first:** This document, then the specification that governs the task being implemented.
 
 ## Project in one paragraph
@@ -63,7 +64,7 @@ Primary location: `/origins`, after the origin thesis. It presents Central Kenya
 
 - Desktop eligible mode: native vertical scroll, bounded sticky stage, image-led chapter transitions, folio numbering, compact metadata, direct chapter navigation, and a clean release.
 - Mobile/reduced-motion/no-JS: complete stacked chapters with dedicated crops and normal dossier links.
-- Preferred enhancement: semantic HTML + CSS + GSAP/ScrollTrigger.
+- Preferred enhancement: semantic HTML + CSS + GSAP/ScrollTrigger. *(Implementation note, 2026-10-28: GSAP has been removed from the codebase; the shipped Folio on `/origins` is semantic HTML + CSS with native scroll and direct chapter navigation via `/origins#folio`.)*
 - Explicitly unnecessary: WebGL, Three.js, maps, terrain, elevation simulators, literal page turns, scroll-jacking, autoplay video.
 
 ## Authority routing
@@ -74,7 +75,7 @@ Round 1.1 explicitly supersedes the horizontal-row desktop Shop default and fixe
 
 ## Current unresolved decisions
 
-- Final fictional coffee names, prices, bag size, grind options, roast/dispatch model, and product availability.
+- ~~Final fictional coffee names~~ (resolved 2026-10-28: named coffees ship in `src/content/coffees.ts`), prices, bag size, grind options, roast/dispatch model, and product availability.
 - Subscription inclusion and any subscription saving.
 - Kiln Cup dimensions, capacity, material, safety, care, price, pairing, and bundle economics.
 - Final verified origin facts, elevation ranges, cultivar/process terminology, and three Edition manuscripts.
@@ -82,7 +83,7 @@ Round 1.1 explicitly supersedes the horizontal-row desktop Shop default and fixe
 - Whether compact region entries remain after the Folio or are partially absorbed after browser prototyping.
 - Desktop header pinned versus smart-hide; select through browser validation.
 - Whether the restrained desktop editorial reveal menu survives browser testing or reduces to the simpler header.
-- Final custom coffee packaging, packshots, alternate product-card media, Kiln Cup imagery/dimensions, and coffee-plus-Cup pairing imagery remain pending. These use deliberate temporary media during the initial build and do not block implementation.
+- Final custom coffee packaging, packshots, alternate product-card media, Kiln Cup imagery/dimensions, and coffee-plus-Cup pairing imagery remain pending. These use deliberate temporary media during the initial build and do not block implementation. *(Implementation state, 2026-10-28: a drawn packaging system (`PackageArt` / `ObjectArt`) has replaced the temporary product placeholders; real Material Series packshots live in `public/media/red-clay/products/` and two Kiln Cup photographs in `public/media/red-clay/objects/`. All other bags use photographic bag renders (`bag-<sku>-front.jpg` / `bag-<sku>-back.jpg`, plus 100 g fronts for the Three Regions packs) in `public/media/red-clay/products/`, built from the real Linen packshot: its print is removed, the paper's own grain and lighting are kept, and each SKU's colours, motif and label are reprinted through that shading. Instant and the Three Regions box remain drawn; Kiln Cup dimensions remain open.)*
 
 ## Initial implementation asset gate
 

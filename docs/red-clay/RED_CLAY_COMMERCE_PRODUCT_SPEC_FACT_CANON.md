@@ -5,6 +5,19 @@
 **Date:** 2026-08-28  
 **Precedence:** Read after `PRODUCT_CONTENT_CANON.md` and before implementation copy/assets where the subjects below are concerned.
 
+**Catalogue change note (2026-10-28):** The Current Harvest coffees were renamed in code (`src/content/coffees.ts`). This document now uses the current names; region and process remain product facts, and the former region/process identifiers survive only as history.
+
+| Former name (former slug) | Earlier working name | Current name | Current slug | Lot code in code |
+|---|---|---|---|---|
+| KIAMBU / WASHED 01 (`kiambu-washed-01`) | Kenya Lot 01 (`kenya-lot-01`) | Plum Season | `/shop/plum-season` | RC / CH / 01 |
+| KIRINYAGA / WASHED 02 (`kirinyaga-washed-02`) | — | Cane Light | `/shop/cane-light` | RC / CH / 02 |
+| KAYANZA / WASHED 01 (`kayanza-washed-01`) | Burundi Lot 01 (`burundi-lot-01`) | Honey Bloom | `/shop/honey-bloom` | RC / CH / 03 |
+| KAYANZA / NATURAL 02 (`kayanza-natural-02`) | — | Red Orchard | `/shop/red-orchard` | RC / CH / 04 |
+| SIDAMA / WASHED 01 (`sidama-washed-01`) | Ethiopia Lot 01 (`ethiopia-lot-01`) | Jasmine Air | `/shop/jasmine-air` | RC / CH / 05 |
+| GUJI / NATURAL 02 (`guji-natural-02`) | Ethiopia Lot 02 (`ethiopia-lot-02`) | Blue Hour | `/shop/blue-hour` | RC / CH / 06 |
+
+All former slugs permanently redirect to the current slugs (`next.config.ts`). Laterite, Basalt, Linen (The Material Series), Afterlight, Red Clay Instant — Ethiopia, Three Regions, and The Kiln Cup (handleless) are unchanged.
+
 ---
 
 ## 1. PURPOSE
@@ -100,12 +113,12 @@ Current Harvest coffees launch in **250g** only.
 
 | Product | Price |
 |---|---:|
-| KIAMBU / WASHED 01 | KES 1,950 |
-| KIRINYAGA / WASHED 02 | KES 2,100 |
-| KAYANZA / WASHED 01 | KES 1,900 |
-| KAYANZA / NATURAL 02 | KES 2,050 |
-| SIDAMA / WASHED 01 | KES 2,100 |
-| GUJI / NATURAL 02 | KES 2,200 |
+| PLUM SEASON | KES 1,950 |
+| CANE LIGHT | KES 2,100 |
+| HONEY BLOOM | KES 1,900 |
+| RED ORCHARD | KES 2,050 |
+| JASMINE AIR | KES 2,100 |
+| BLUE HOUR | KES 2,200 |
 
 Do not create fake scarcity or sale pricing.
 
@@ -194,12 +207,12 @@ Use roast level as practical orientation.
 | LATERITE | Medium-light | Filter / batch / espresso |
 | BASALT | Medium | Espresso / moka / milk |
 | LINEN | Light | Filter / batch |
-| KIAMBU / WASHED 01 | Light | Filter-first |
-| KIRINYAGA / WASHED 02 | Light | Filter-first |
-| KAYANZA / WASHED 01 | Light | Filter-first |
-| KAYANZA / NATURAL 02 | Light | Filter-first |
-| SIDAMA / WASHED 01 | Light | Filter-first |
-| GUJI / NATURAL 02 | Light | Filter-first |
+| PLUM SEASON | Light | Filter-first |
+| CANE LIGHT | Light | Filter-first |
+| HONEY BLOOM | Light | Filter-first |
+| RED ORCHARD | Light | Filter-first |
+| JASMINE AIR | Light | Filter-first |
+| BLUE HOUR | Light | Filter-first |
 | AFTERLIGHT | Medium-light | Filter / espresso |
 
 For Instant, omit roast level unless production later requires it.
@@ -506,7 +519,10 @@ The following are approved fictional lot compositions built from real varieties 
 
 Real variety background is supported by World Coffee Research.
 
-## KIAMBU / WASHED 01
+## PLUM SEASON
+
+Lot code:
+**RC / CH / 01** (formerly KIAMBU / WASHED 01) · `/shop/plum-season`
 
 Country:
 **Kenya**
@@ -538,7 +554,10 @@ Do not claim the current documentary images depict this fictional lot.
 
 ---
 
-## KIRINYAGA / WASHED 02
+## CANE LIGHT
+
+Lot code:
+**RC / CH / 02** (formerly KIRINYAGA / WASHED 02) · `/shop/cane-light`
 
 Country:
 **Kenya**
@@ -604,7 +623,10 @@ Do not claim that washed processing automatically creates a specific flavor.
 
 # 16. COFFEE FACT CANON — BURUNDI
 
-## KAYANZA / WASHED 01
+## HONEY BLOOM
+
+Lot code:
+**RC / CH / 03** (formerly KAYANZA / WASHED 01) · `/shop/honey-bloom`
 
 Country:
 **Burundi**
@@ -628,7 +650,10 @@ Roast:
 
 ---
 
-## KAYANZA / NATURAL 02
+## RED ORCHARD
+
+Lot code:
+**RC / CH / 04** (formerly KAYANZA / NATURAL 02) · `/shop/red-orchard`
 
 Country:
 **Burundi**
@@ -672,7 +697,10 @@ The site's `Southern Ethiopia` chapter is a **broad editorial grouping**, not an
 
 Public product geography must remain specific.
 
-### SIDAMA / WASHED 01
+### JASMINE AIR
+
+Lot code:
+**RC / CH / 05** (formerly SIDAMA / WASHED 01) · `/shop/jasmine-air`
 
 Country:
 **Ethiopia**
@@ -694,7 +722,10 @@ Profile:
 Roast:
 **Light**
 
-### GUJI / NATURAL 02
+### BLUE HOUR
+
+Lot code:
+**RC / CH / 06** (formerly GUJI / NATURAL 02) · `/shop/blue-hour`
 
 Country:
 **Ethiopia**
@@ -811,16 +842,18 @@ Approved factual foundations:
 
 During the next asset audit, explicitly flag:
 
-- KIRINYAGA / WASHED 02 — dedicated region media needed;
-- GUJI / NATURAL 02 — dedicated region media needed;
-- SIDAMA / WASHED 01 — current Hawassa/process media is contextual, not a dedicated fictional-lot image;
-- all Material Series products — custom packaging/product media needed;
+- CANE LIGHT — dedicated region media needed;
+- BLUE HOUR — dedicated region media needed;
+- JASMINE AIR — current Hawassa/process media is contextual, not a dedicated fictional-lot image;
+- all Material Series products — custom packaging/product media needed; *(2026-10-28: real packshots for Laterite, Basalt, Linen, and the trio now ship in `public/media/red-clay/products/`)*;
 - Afterlight — custom decaf packaging;
 - Instant — box + sachet system;
 - Three Regions — discovery packaging;
-- Kiln Cup — final object renders and dimensional graphic.
+- Kiln Cup — final object renders and dimensional graphic. *(2026-10-28: two photographs — plinth and raking light — now ship in `public/media/red-clay/objects/`; a dimensional graphic is still not present.)*
 
 Do not solve these by mislabeling current stock photography.
+
+*(Implementation state, 2026-10-28: every bag (Current Harvest, Afterlight, the Material Series backs and the Three Regions 100 g packs) now uses photographic bag renders (`bag-<sku>-front.jpg` / `bag-<sku>-back.jpg`, plus 100 g fronts for the Three Regions packs) in `public/media/red-clay/products/`, built from the real Linen packshot: its print is removed, the paper's own grain and lighting are kept, and each SKU's colours, motif and label are reprinted through that shading. Instant and the Three Regions box still use the drawn `ObjectArt`. Region media: Cane Light now opens on a Kirinyaga landscape (`KEN-LAND-003`, near Kutus) and Jasmine Air on a Sidama landscape (`ETH-LAND-001`, Wondo Genet); neither is a coffee scene. Guji has no freely licensed, location-verified photograph, so Blue Hour keeps contextual Ethiopia imagery and that flag stays open.)*
 
 ---
 

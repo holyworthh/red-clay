@@ -7,6 +7,19 @@
 
 **Commerce supersession:** `RED_CLAY_COMMERCE_PRODUCT_SPEC_FACT_CANON.md` is the later approved authority for prices, formats, grinds, delivery, and portfolio checkout implemented in this branch. The unresolved list below remains the historical copy-lock state for fields outside that commerce extension.
 
+**Catalogue change note (2026-10-28):** The Current Harvest coffees were renamed in code (`src/content/coffees.ts`). This document now uses the current names; region and process remain product facts, and the former region/process identifiers survive only as history.
+
+| Former name (former slug) | Earlier working name | Current name | Current slug | Lot code in code |
+|---|---|---|---|---|
+| KIAMBU / WASHED 01 (`kiambu-washed-01`) | Kenya Lot 01 (`kenya-lot-01`) | Plum Season | `/shop/plum-season` | RC / CH / 01 |
+| KIRINYAGA / WASHED 02 (`kirinyaga-washed-02`) | — | Cane Light | `/shop/cane-light` | RC / CH / 02 |
+| KAYANZA / WASHED 01 (`kayanza-washed-01`) | Burundi Lot 01 (`burundi-lot-01`) | Honey Bloom | `/shop/honey-bloom` | RC / CH / 03 |
+| KAYANZA / NATURAL 02 (`kayanza-natural-02`) | — | Red Orchard | `/shop/red-orchard` | RC / CH / 04 |
+| SIDAMA / WASHED 01 (`sidama-washed-01`) | Ethiopia Lot 01 (`ethiopia-lot-01`) | Jasmine Air | `/shop/jasmine-air` | RC / CH / 05 |
+| GUJI / NATURAL 02 (`guji-natural-02`) | Ethiopia Lot 02 (`ethiopia-lot-02`) | Blue Hour | `/shop/blue-hour` | RC / CH / 06 |
+
+All former slugs permanently redirect to the current slugs (`next.config.ts`). Laterite, Basalt, Linen (The Material Series), Afterlight, Red Clay Instant — Ethiopia, Three Regions, and The Kiln Cup (handleless) are unchanged.
+
 ---
 
 # 0. PURPOSE
@@ -206,18 +219,20 @@ Material names are brand metaphors. They must never imply that the named materia
 
 Transparent seasonal releases.
 
-These coffees should use **region + process + release number** rather than fictional farm or washing-station names.
+These coffees carry a short evocative **product name**, a **lot code**, and a stated **region + process**, rather than fictional farm or washing-station names.
 
 This protects Red Clay from inventing real producer relationships while still allowing the product catalog to feel credible and specific.
 
 ## Naming pattern
 
-`REGION / PROCESS ##`
+*(Updated 2026-10-28.)* The earlier `REGION / PROCESS ##` pattern (e.g. `KIAMBU / WASHED 01`, `GUJI / NATURAL 02`) is superseded as the public product name. Current pattern, as shipped in `src/content/coffees.ts`:
 
-Examples:
+- **Name:** e.g. `Plum Season`, `Blue Hour`
+- **Lot code:** `RC / CH / ##` (e.g. `RC / CH / 01`)
+- **Meta line:** `Region, Country · Process` (e.g. `Kiambu, Kenya · Washed`)
 
-- `KIAMBU / WASHED 01`
-- `GUJI / NATURAL 02`
+Region and process remain stated facts on every Current Harvest product; the name must never replace them.
+
 
 ## Current Harvest collection term
 
@@ -235,8 +250,10 @@ Avoid using `seasonal`, `current lot`, `current release`, and `current coffee` i
 
 # 7. CURRENT HARVEST — INITIAL SIX
 
-## 7.1 KIAMBU / WASHED 01
+## 7.1 PLUM SEASON
 
+**Lot code:** RC / CH / 01 (formerly `KIAMBU / WASHED 01`)  
+**Slug:** `/shop/plum-season`
 **Status:** APPROVED WORKING PRODUCT
 **Country:** Kenya
 **Region:** Kiambu
@@ -255,27 +272,31 @@ Avoid using `seasonal`, `current lot`, `current release`, and `current coffee` i
 
 **Asset note:** Current Kenya imagery may support Kiambu context where provenance allows. Do not broaden one Kiambu asset into unsupported Kirinyaga/Nyeri claims.
 
-## 7.2 KIRINYAGA / WASHED 02
+## 7.2 CANE LIGHT
 
+**Lot code:** RC / CH / 02 (formerly `KIRINYAGA / WASHED 02`)  
+**Slug:** `/shop/cane-light`
 **Status:** APPROVED WORKING PRODUCT — NEW
 **Country:** Kenya
 **Region:** Kirinyaga
 **Process:** Washed
 **Profile:** Red currant / hibiscus / pomelo
-**Character:** Brighter / more floral / sharper than Kiambu
+**Character:** Brighter / more floral / sharper than Plum Season
 
 **Working short description:** A more lifted Kenyan expression, moving from red currant into hibiscus and pomelo.
 
 **Story axis:** highland cultivation; Kenyan washed-coffee traditions; variety; contrast within one country.
 
-**Customer comparison:** Compared with Kiambu / Washed 01, brighter, more floral, less plum-driven, more citrus-led.
+**Customer comparison:** Compared with Plum Season, brighter, more floral, less plum-driven, more citrus-led.
 
 **Asset status:** **CUSTOM / APPROPRIATE REGIONAL ASSET REQUIRED**
 
 Do not reuse Kiambu photography and label it Kirinyaga.
 
-## 7.3 KAYANZA / WASHED 01
+## 7.3 HONEY BLOOM
 
+**Lot code:** RC / CH / 03 (formerly `KAYANZA / WASHED 01`)  
+**Slug:** `/shop/honey-bloom`
 **Status:** APPROVED WORKING PRODUCT
 **Country:** Burundi
 **Region:** Kayanza
@@ -292,8 +313,10 @@ Do not reuse Kiambu photography and label it Kirinyaga.
 
 **Customer comparison:** Recommend for floral sweetness, softer acidity, honeyed depth, and red-fruit character.
 
-## 7.4 KAYANZA / NATURAL 02
+## 7.4 RED ORCHARD
 
+**Lot code:** RC / CH / 04 (formerly `KAYANZA / NATURAL 02`)  
+**Slug:** `/shop/red-orchard`
 **Status:** APPROVED WORKING PRODUCT — NEW
 **Country:** Burundi
 **Region:** Kayanza
@@ -308,10 +331,12 @@ Do not reuse Kiambu photography and label it Kirinyaga.
 
 **Related Edition:** **Two Ways Through Kayanza**
 
-**Customer comparison:** Compared with Kayanza / Washed 01, fruitier, rounder, deeper sweetness, less floral clarity.
+**Customer comparison:** Compared with Honey Bloom, fruitier, rounder, deeper sweetness, less floral clarity.
 
-## 7.5 SIDAMA / WASHED 01
+## 7.5 JASMINE AIR
 
+**Lot code:** RC / CH / 05 (formerly `SIDAMA / WASHED 01`)  
+**Slug:** `/shop/jasmine-air`
 **Status:** APPROVED WORKING PRODUCT — REPLACES ETHIOPIA LOT 01
 **Country:** Ethiopia
 **Region:** Sidama
@@ -330,8 +355,10 @@ Do not reuse Kiambu photography and label it Kirinyaga.
 
 **Asset status:** Current Hawassa/process assets may support broad Ethiopia process context only. Do not label existing Hawassa process imagery as a Sidama landscape unless provenance supports it.
 
-## 7.6 GUJI / NATURAL 02
+## 7.6 BLUE HOUR
 
+**Lot code:** RC / CH / 06 (formerly `GUJI / NATURAL 02`)  
+**Slug:** `/shop/blue-hour`
 **Status:** APPROVED WORKING PRODUCT — REPLACES ETHIOPIA LOT 02
 **Country:** Ethiopia
 **Region:** Guji
@@ -346,7 +373,7 @@ Do not reuse Kiambu photography and label it Kirinyaga.
 
 **Related Edition:** **Beyond “Heirloom”** and a future process-focused Edition.
 
-**Customer comparison:** Compared with Sidama / Washed 01, fuller, fruitier, less tea-like, deeper sweetness.
+**Customer comparison:** Compared with Jasmine Air, fuller, fruitier, less tea-like, deeper sweetness.
 
 **Asset status:** **CUSTOM / APPROPRIATE REGIONAL ASSET REQUIRED**
 
@@ -387,9 +414,9 @@ Do not label current Hawassa imagery as Guji-specific.
 **Working format:** 3 × 100g
 
 **Initial composition:**
-- Kiambu / Washed 01
-- Kayanza / Washed 01
-- Sidama / Washed 01
+- Plum Season
+- Honey Bloom
+- Jasmine Air
 
 **Product role:** A low-friction entry into Red Clay's seasonal collection.
 
@@ -455,12 +482,12 @@ Recommended order:
 - Linen
 
 ## CURRENT HARVEST
-- Kiambu / Washed 01
-- Kirinyaga / Washed 02
-- Kayanza / Washed 01
-- Kayanza / Natural 02
-- Sidama / Washed 01
-- Guji / Natural 02
+- Plum Season
+- Cane Light
+- Honey Bloom
+- Red Orchard
+- Jasmine Air
+- Blue Hour
 
 ## OTHER WAYS TO DRINK
 - Afterlight
@@ -608,7 +635,7 @@ Avoid generic structures that merely repeat `PLACE → PROCESS → PRODUCT` unle
 
 **Status:** APPROVED
 **Region:** Central Kenya
-**Related coffee:** Kiambu / Washed 01
+**Related coffee:** Plum Season
 
 **Subtitle:** **Why washed coffee became such a defining part of Kenya's specialty-coffee identity**
 
@@ -624,7 +651,7 @@ Avoid generic structures that merely repeat `PLACE → PROCESS → PRODUCT` unle
 - SL28 / SL34 context;
 - what washed processing can influence;
 - what process alone cannot explain;
-- how Red Clay's Kiambu release fits into this story.
+- how Plum Season, Red Clay's Kiambu coffee, fits into this story.
 
 **Guardrail:** Do not write that washed coffee tastes like blackcurrant because it is washed.
 
@@ -632,7 +659,7 @@ Avoid generic structures that merely repeat `PLACE → PROCESS → PRODUCT` unle
 
 **Status:** APPROVED
 **Region:** Kayanza / Burundi
-**Related coffee:** Kayanza / Washed 01
+**Related coffee:** Honey Bloom
 
 **Subtitle:** **How coffee moves from hillside plots to washing stations and raised drying beds**
 
@@ -654,7 +681,7 @@ Avoid generic structures that merely repeat `PLACE → PROCESS → PRODUCT` unle
 
 **Status:** APPROVED — REPLACES `Canopy & Landrace`
 **Region:** Ethiopia
-**Related coffees:** Sidama / Washed 01, Guji / Natural 02
+**Related coffees:** Jasmine Air, Blue Hour
 
 **Subtitle:** **Why Ethiopian coffee diversity resists one convenient word**
 
@@ -679,7 +706,7 @@ Avoid generic structures that merely repeat `PLACE → PROCESS → PRODUCT` unle
 ## TWO WAYS THROUGH KAYANZA
 **Status:** APPROVED FUTURE EDITION
 **Subtitle:** **One region. One variety family. Washed and natural coffee.**
-**Related coffees:** Kayanza / Washed 01; Kayanza / Natural 02
+**Related coffees:** Honey Bloom; Red Orchard
 **Purpose:** Show that process matters without presenting it as a deterministic flavor machine.
 
 ## WHAT WASHING CHANGES
@@ -750,7 +777,7 @@ The remaining Editions may exist as planned/future content internally, but shoul
 
 Prefer:
 - Shop the harvest
-- View Kiambu / Washed 01
+- View Plum Season
 - View Laterite
 - Add to Bag
 - See all coffees
@@ -868,9 +895,9 @@ Useful orientation can sound like:
 
 > Prefer something lighter and more floral? Try Linen.
 
-> The washed Kayanza release is cleaner and more floral; the natural moves toward raspberry and deeper sweetness.
+> Honey Bloom, the washed Kayanza coffee, is cleaner and more floral; Red Orchard, the natural, moves toward raspberry and deeper sweetness.
 
-> Sidama / Washed 01 is the lighter of the two Ethiopian coffees.
+> Jasmine Air is the lighter of the two Ethiopian coffees.
 
 This is the desired meaning of “personal.” It is not casual slang.
 
@@ -1116,12 +1143,12 @@ Use them less often, not more.
 | Laterite | Material Series | APPROVED WORKING |
 | Basalt | Material Series | APPROVED WORKING |
 | Linen | Material Series | APPROVED WORKING |
-| Kiambu / Washed 01 | Current Harvest | APPROVED WORKING |
-| Kirinyaga / Washed 02 | Current Harvest | APPROVED WORKING — NEW |
-| Kayanza / Washed 01 | Current Harvest | APPROVED WORKING |
-| Kayanza / Natural 02 | Current Harvest | APPROVED WORKING — NEW |
-| Sidama / Washed 01 | Current Harvest | APPROVED WORKING — REPLACES ETHIOPIA LOT 01 |
-| Guji / Natural 02 | Current Harvest | APPROVED WORKING — REPLACES ETHIOPIA LOT 02 |
+| Plum Season | Current Harvest | APPROVED WORKING |
+| Cane Light | Current Harvest | APPROVED WORKING — NEW |
+| Honey Bloom | Current Harvest | APPROVED WORKING |
+| Red Orchard | Current Harvest | APPROVED WORKING — NEW |
+| Jasmine Air | Current Harvest | APPROVED WORKING — REPLACES ETHIOPIA LOT 01 |
+| Blue Hour | Current Harvest | APPROVED WORKING — REPLACES ETHIOPIA LOT 02 |
 | Afterlight | Other Ways to Drink | APPROVED WORKING |
 | Red Clay Instant — Ethiopia | Other Ways to Drink | APPROVED WORKING |
 | Three Regions | Other Ways to Drink | APPROVED WORKING |
@@ -1139,14 +1166,18 @@ The following should no longer be treated as final public product names:
 - ETHIOPIA LOT 01
 - ETHIOPIA LOT 02
 
-| Superseded | New working public product |
-|---|---|
-| KENYA LOT 01 | KIAMBU / WASHED 01 |
-| BURUNDI LOT 01 | KAYANZA / WASHED 01 |
-| ETHIOPIA LOT 01 | SIDAMA / WASHED 01 |
-| ETHIOPIA LOT 02 | GUJI / NATURAL 02 |
+- KIAMBU / WASHED 01, KIRINYAGA / WASHED 02, KAYANZA / WASHED 01, KAYANZA / NATURAL 02, SIDAMA / WASHED 01, GUJI / NATURAL 02 (superseded 2026-10-28)
 
-Historical references in implementation/docs may remain until the migration pass, but new customer-facing copy should use the new canon.
+| Superseded | Intermediate name (superseded) | Current public product |
+|---|---|---|
+| KENYA LOT 01 | KIAMBU / WASHED 01 | PLUM SEASON |
+| — | KIRINYAGA / WASHED 02 | CANE LIGHT |
+| BURUNDI LOT 01 | KAYANZA / WASHED 01 | HONEY BLOOM |
+| — | KAYANZA / NATURAL 02 | RED ORCHARD |
+| ETHIOPIA LOT 01 | SIDAMA / WASHED 01 | JASMINE AIR |
+| ETHIOPIA LOT 02 | GUJI / NATURAL 02 | BLUE HOUR |
+
+Former slugs redirect permanently to the current ones (`next.config.ts`). Historical references in reports/audits may remain, but new customer-facing copy should use the current names.
 
 ---
 
@@ -1188,7 +1219,7 @@ Historical references in implementation/docs may remain until the migration pass
 ## Product facts
 - final public variety detail;
 - factual support for process/region statements;
-- whether Kirinyaga / Washed 02 needs a different process or exact profile;
+- whether Cane Light needs a different process or exact profile;
 - exact decaf method for Afterlight.
 
 ## Dispatch
