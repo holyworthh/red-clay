@@ -14,6 +14,7 @@ export function EditionArticle({ edition }: { edition: Edition }) {
 
   return (
     <main id="main-content" className="article">
+      <div className="read-progress" aria-hidden="true"><span /></div>
       <header className="wrap article-head">
         <p className="mono muted article-eyebrow"><Link href="/journal">Editions</Link> / Volume 01 — Place / Story {edition.storyOrdinal}</p>
         <h1 className="serif article-title">{edition.title}</h1>

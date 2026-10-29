@@ -22,7 +22,7 @@ export default function EditionsPage() {
       </section>
 
       <section className="wrap">
-        <Link href={`/journal/${featured.slug}`} className="editions-featured">
+        <Link href={`/journal/${featured.slug}`} className="editions-featured" data-cursor="Read">
           <span className="editions-featured-media"><Image className="grade" src={redClayAssets.documentary.homeProcess.src} alt={redClayAssets.documentary.homeProcess.alt} fill sizes="(max-width: 820px) 100vw, 66vw" priority /></span>
           <span className="editions-featured-copy">
             <span className="mono muted">Story {featured.storyOrdinal} · {featured.region}</span>
@@ -35,13 +35,13 @@ export default function EditionsPage() {
       </section>
 
       <section className="wrap editions-pair">
-        <Link href={`/journal/${second.slug}`} className="editions-story">
+        <Link href={`/journal/${second.slug}`} className="editions-story" data-cursor="Read">
           <span className="ratio-3-4"><Image className="grade" src={second.leadAsset.src!} alt={second.leadAsset.alt} fill sizes="(max-width: 820px) 100vw, 40vw" /></span>
           <span className="mono muted">Story {second.storyOrdinal} · {second.region}</span>
           <span className="serif display-m">{second.title}</span>
           <span>{second.cardDeck}</span>
         </Link>
-        <Link href={`/journal/${third.slug}`} className="editions-story editions-story--offset">
+        <Link href={`/journal/${third.slug}`} className="editions-story editions-story--offset" data-cursor="Read">
           <span className="ratio-4-3"><Image className="grade" src={third.leadAsset.src!} alt={third.leadAsset.alt} fill sizes="(max-width: 820px) 100vw, 50vw" /></span>
           <span className="mono muted">Story {third.storyOrdinal} · {third.region}</span>
           <span className="serif display-m">{third.title}</span>

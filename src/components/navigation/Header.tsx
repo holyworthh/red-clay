@@ -19,6 +19,8 @@ export function Header() {
   const [panel, setPanel] = useState<Panel>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [heroTone, setHeroTone] = useState<HeroTone>("light");
+  const [scrolledDown, setScrolledDown] = useState(false);
+  const [pastHero, setPastHero] = useState(false);
   const closeTimer = useRef<number | null>(null);
   const isHome = pathname === "/";
 
@@ -41,6 +43,24 @@ export function Header() {
   }, [pathname]);
 
   useEffect(() => () => cancelClose(), [cancelClose]);
+
+  // Hide on scroll down, return on any scroll up; on home, turn solid after the hero.
+  useEffect(() => {
+    let last = window.scrollY;
+    let frame = 0;
+    const onScroll = () => {
+      if (frame) return;
+      frame = requestAnimationFrame(() => {
+        frame = 0;
+        const y = window.scrollY;
+        if (Math.abs(y - last) > 4) { setScrolledDown(y > last && y > 120); last = y; }
+        setPastHero(y > window.innerHeight * 0.8);
+      });
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => { window.removeEventListener("scroll", onScroll); cancelAnimationFrame(frame); };
+  }, [pathname]);
 
   useEffect(() => {
     if (!isHome) return;
@@ -67,11 +87,12 @@ export function Header() {
 
   const closeMobile = useCallback(() => setMobileOpen(false), []);
   const isCurrent = (href: string) => pathname === href || (href !== "/" && pathname.startsWith(`${href}/`));
-  const overlay = isHome && !panel;
+  const overlay = isHome && !panel && !pastHero;
+  const hidden = scrolledDown && !panel && !mobileOpen;
   const tone = overlay ? heroTone : "solid";
 
   return (
-    <header className={`site-header ${isHome ? "site-header--home" : ""}`} data-tone={tone} data-panel={panel ?? "none"} onMouseLeave={scheduleClose} onMouseEnter={cancelClose}>
+    <header className={`site-header ${isHome ? "site-header--home" : ""}`} data-tone={tone} data-panel={panel ?? "none"} data-hidden={hidden} onMouseLeave={scheduleClose} onMouseEnter={cancelClose}>
       <a className="skip-link" href="#main-content">Skip to content</a>
       <div className="site-header-bar">
         <div className="site-header-left">
@@ -188,7 +209,7 @@ function MobileMenu({ count, close, openBag }: Readonly<{ count: number; close: 
   const toggle = (next: "shop" | "origins") => setSection((current) => (current === next ? null : next));
 
   return (
-    <div ref={ref} className="mobile-menu" id="mobile-menu" role="dialog" aria-modal="true" aria-label="Menu">
+    <div ref={ref} className="mobile-menu" data-lenis-prevent id="mobile-menu" role="dialog" aria-modal="true" aria-label="Menu">
       <div className="mobile-menu-bar">
         <button className="mobile-menu-close" type="button" aria-label="Close menu" onClick={close}><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 2l12 12M14 2L2 14" stroke="currentColor" strokeWidth="1.3" /></svg></button>
         <Link className="site-wordmark" href="/" onClick={close}>Red Clay</Link>

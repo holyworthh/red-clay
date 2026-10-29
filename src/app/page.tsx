@@ -42,12 +42,17 @@ export default function HomePage() {
             </figure>
           ))}
         </div>
+        <div className="home-continuum-meta" aria-hidden="true">
+          <span className="mono"><span className="home-continuum-count-n">01</span> / 04</span>
+          <span className="home-continuum-track"><span /></span>
+          <ol className="home-continuum-steps mono">{continuum.map((item) => <li key={item.label}>{item.label}</li>)}</ol>
+        </div>
       </section>
 
       <section className="home-material" aria-labelledby="material-title">
-        <Link href="/shop#material-series" className="home-material-stage">
+        <Link href="/shop#material-series" className="home-material-stage" data-cursor="View" data-transition-label="The Material Series">
           {material.map((asset, index) => (
-            <span key={asset.id} className={`home-material-bag home-material-bag--${index + 1}`}><Image className="cut" src={asset.src} alt={asset.alt} width={444} height={680} sizes="(max-width: 820px) 30vw, 18vw" /></span>
+            <span key={asset.id} className={`home-material-bag home-material-bag--${index + 1}`}><span className="home-material-bag-drift"><Image className="cut" src={asset.src} alt={asset.alt} width={444} height={680} sizes="(max-width: 820px) 30vw, 18vw" /></span></span>
           ))}
         </Link>
         <div className="wrap home-material-caption">
@@ -73,7 +78,7 @@ export default function HomePage() {
             <Link className="text-link" href="/origins">Open The Earthen Folio</Link>
           </div>
           {originsPreview.map((origin) => (
-            <Link key={origin.href} href={origin.href} className={origin.className}>
+            <Link key={origin.href} href={origin.href} className={origin.className} data-cursor="Explore">
               <span className="home-origin-media"><Image className="grade" src={origin.asset.src} alt={origin.asset.alt} fill sizes="(max-width: 820px) 100vw, 45vw" /></span>
               <span className="home-origin-caption"><span className="serif">{origin.name}</span><span className="mono muted">{origin.meta}</span></span>
             </Link>
@@ -81,8 +86,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="wrap home-edition" aria-labelledby="edition-title">
-        <Link href="/journal/water-and-time" className="home-edition-panel">
+      <section className="home-edition" aria-labelledby="edition-title">
+        <Link href="/journal/water-and-time" className="home-edition-panel" data-cursor="Read" data-transition-label="Water & Time">
           <Image className="grade" src={redClayAssets.documentary.homeProcess.src} alt={redClayAssets.documentary.homeProcess.alt} fill sizes="100vw" />
           <span className="home-edition-scrim" aria-hidden="true" />
           <span className="home-edition-copy">
@@ -105,7 +110,7 @@ export default function HomePage() {
           <p>High-fired iron-rich stoneware with a warm mineral-white interior. A tapered body that holds about 300ml, made for the first cup of the day.</p>
           <div className="button-row"><Link className="button" href="/shop/the-kiln-cup">Shop The Kiln Cup</Link><span>{formatKes(kilnCup.price)}</span></div>
         </div>
-        <div className="home-kiln-object"><Image src={redClayAssets.objects.kilnPlinth.src} alt={redClayAssets.objects.kilnPlinth.alt} fill sizes="(max-width: 820px) 100vw, 33vw" /></div>
+        <div className="home-kiln-object"><Image src={redClayAssets.objects.kilnPlinth.src} alt={redClayAssets.objects.kilnPlinth.alt} fill sizes="(max-width: 820px) 100vw, 33vw" /><span className="home-kiln-light" aria-hidden="true" /></div>
       </section>
     </main>
   );

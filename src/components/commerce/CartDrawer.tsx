@@ -38,7 +38,7 @@ export function CartDrawer() {
   return (
     <>
       <button className="drawer-backdrop" type="button" aria-label="Close bag" onClick={close} />
-      <aside ref={panelRef} className="drawer" role="dialog" aria-modal="true" aria-labelledby="bag-title">
+      <aside ref={panelRef} className="drawer" data-lenis-prevent role="dialog" aria-modal="true" aria-labelledby="bag-title">
         <div className="drawer-head">
           <h2 id="bag-title" className="serif">Your Bag <span className="mono muted">({count})</span></h2>
           <button className="icon-button" type="button" aria-label="Close bag" onClick={close}><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 2l12 12M14 2L2 14" stroke="currentColor" strokeWidth="1.3" /></svg></button>

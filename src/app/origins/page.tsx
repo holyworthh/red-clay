@@ -38,6 +38,7 @@ export default function OriginsPage() {
           <span>The Earthen Folio</span>
           {origins.map((origin) => <a key={origin.slug} href={`#${origin.slug}`}>{origin.number} {origin.name}</a>)}
         </div>
+        <span className="folio-bar-progress" aria-hidden="true" />
       </nav>
 
       {origins.map((origin) => {
@@ -71,7 +72,7 @@ export default function OriginsPage() {
                   <p className="mono muted">Two coffees from this chapter</p>
                   <div className="grid-2">
                     {coffees.map((coffee) => (
-                      <Link key={coffee.slug} href={`/shop/${coffee.slug}`} className="folio-coffee">
+                      <Link key={coffee.slug} href={`/shop/${coffee.slug}`} className="folio-coffee" data-cursor="View">
                         <span className="ratio-4-5"><ProductVisual product={coffee} sizes="15vw" /></span>
                         <span className="serif">{coffee.name}</span>
                         <span className="small muted">{coffee.region.split(",")[0]} · {coffee.notes.join(" / ")}</span>

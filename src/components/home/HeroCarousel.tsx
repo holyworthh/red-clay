@@ -20,12 +20,6 @@ export function HeroCarousel() {
   }, []);
 
   useEffect(() => {
-    if (paused || stopped || reducedMotion) return;
-    const timer = window.setInterval(() => setActive((index) => (index + 1) % homeHeroSlides.length), 5000);
-    return () => window.clearInterval(timer);
-  }, [active, paused, stopped, reducedMotion]);
-
-  useEffect(() => {
     document.documentElement.dataset.homeHeroTone = slide.headerTone;
     document.dispatchEvent(new CustomEvent(homeHeroToneEvent, { detail: slide.headerTone }));
     return () => { delete document.documentElement.dataset.homeHeroTone; };
@@ -35,6 +29,7 @@ export function HeroCarousel() {
     <section
       className="hero"
       aria-labelledby="home-title"
+      data-paused={paused || stopped}
       onPointerEnter={(event) => { if (event.pointerType === "mouse") setPaused(true); }}
       onPointerLeave={(event) => { if (event.pointerType === "mouse") setPaused(false); }}
       onFocusCapture={() => setPaused(true)}
@@ -63,6 +58,8 @@ export function HeroCarousel() {
               <span className="mono">0{index + 1}</span>
               <span className="serif hero-selector-label">{item.label}</span>
               <span className="mono hero-selector-caption">{item.caption}</span>
+              {/* Autoplay: the slide advances when this hairline finishes filling (CSS, 6s). */}
+              <span className="hero-selector-progress" aria-hidden="true" onAnimationEnd={() => setActive((index + 1) % homeHeroSlides.length)} />
             </button>
           ))}
           {!reducedMotion && <button type="button" className="mono hero-pause" aria-pressed={stopped} onClick={() => setStopped((value) => !value)}>{stopped ? "Play" : "Pause"}</button>}
